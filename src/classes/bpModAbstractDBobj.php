@@ -11,7 +11,7 @@
  *
  * @author Francesco
  */
-class bpModAbstractDBobj extends bpModOverloadable
+class bpModAbstractDBobj
 {
 
 	/**
@@ -163,7 +163,7 @@ class bpModAbstractDBobj extends bpModOverloadable
 	 * @param string $field | field to store in
 	 * @param mixed $vaule | value to store
 	 */
-	function set__($field, $value)
+	function __set($field, $value)
 	{
 		if ($field == $this->__id_field) {
 			$this->__id = $value;
@@ -181,7 +181,7 @@ class bpModAbstractDBobj extends bpModOverloadable
 	 * @param string $field | field to get
 	 * @return mixed $value
 	 */
-	function get__($field)
+	function __get($field)
 	{
 		if ($field == $this->__id_field) {
 			return $this->__id;

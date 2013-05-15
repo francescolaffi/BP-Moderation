@@ -1,8 +1,5 @@
 <?php
 
-//php4 helper: my little abstraction layer between php4 and php5
-bpModLoader::load_class('bpModPHP4helper');
-
 /**
  * Contains vars and methods shared by installer/frontend/backend/actions
  *
@@ -10,7 +7,7 @@ bpModLoader::load_class('bpModPHP4helper');
  *
  * @author Francesco
  */
-class bpModAbstractCore extends bpModPHP4helper
+class bpModAbstractCore
 {
 
 	/**
