@@ -12,7 +12,7 @@ jq(document).ready(function() {
     inner.addClass('ajax-loader');
 
     var href = link.attr('href');
-    var data = href.replace(/[^?]*\?(.*)bpmod-action=(.*)/, '$1bpmod-ajax=$2');
+    var data = href.replace(/[^?]*\?(.*)/, '$1&action=bpmodfrontend');
 
     if (bpmod_current_requests[data])
       return false;

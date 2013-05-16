@@ -15,20 +15,12 @@ class bpModActions extends bpModeration
 
 	function route_action()
 	{
-		$func = null;
+		if (empty($_REQUEST['bpmod-action'])) return;
 
-		//non ajax actions
-		if (!empty($_REQUEST['bpmod-action'])) {
-			$func = array(&$this, 'action_' . $_REQUEST['bpmod-action']);
-		}
+		$method = (defined('DOING_AJAX') && DOING_AJAX ? 'ajax_' : 'action_') . $_REQUEST['bpmod-action'];
 
-		//ajax request
-		if (!empty($_REQUEST['bpmod-ajax'])) {
-			$func = array(&$this, 'ajax_' . $_REQUEST['bpmod-ajax']);
-		}
-
-		if ($func && is_callable($func)) {
-			call_user_func($func);
+		if (is_callable(array($this, $method))) {
+			call_user_func(array($this, $method));
 		}
 	}
 
@@ -54,7 +46,7 @@ class bpModActions extends bpModeration
 
 	function ajax_flag()
 	{
-		if ('flag' != $_REQUEST['bpmod-ajax']) {
+		if ('flag' != $_REQUEST['bpmod-action']) {
 			return false;
 		}
 
@@ -220,7 +212,7 @@ Author profile: %3$s
 
 	function ajax_unflag()
 	{
-		if ('unflag' != $_REQUEST['bpmod-ajax']) {
+		if ('unflag' != $_REQUEST['bpmod-action']) {
 			return false;
 		}
 
