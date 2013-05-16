@@ -65,8 +65,6 @@ class bpModAbstractDBobj
 
 	function  __construct($id = false)
 	{
-		parent::__construct();
-
 		if ((int)$id) {
 			$this->populate($id);
 		}

@@ -43,7 +43,8 @@ class bpModeration extends bpModAbstractCore
 	function __construct()
 	{
 		parent::__construct();
-		$this->plugin_url = plugins_url(plugin_basename(dirname(bpModLoader::file())));
+
+		$this->plugin_url = plugins_url('', bpModLoader::file());
 
 		$this->options = get_site_option('bp_moderation_options');
 	}

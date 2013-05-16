@@ -43,14 +43,9 @@ class bpModLoader
 	{
 		add_action('bp_init', array($this, 'init'));
 
-		register_activation_hook(__FILE__, array($this, 'call_activate'));
+		register_activation_hook(self::file(), array($this, 'call_activate'));
 
-		register_deactivation_hook(__FILE__, array($this, 'call_deactivate'));
-		/*
-		self::$dir = dirname(__FILE__);
-		self::$basename = plugin_basename(self::$dir);
-		self::$url = plugins_url(self::$basename);
-		*/
+		register_deactivation_hook(self::file(), array($this, 'call_deactivate'));
 	}
 
 	/**
@@ -58,20 +53,23 @@ class bpModLoader
 	 */
 	function init()
 	{
-
 		if (is_admin()) {
-			// if this is an admin page and the current user is not a site admin then the plugin doesn't load at all
-			if (!is_super_admin()) {
-				return;
-			}
-
-			if (!empty($_REQUEST['bpmod-action'])) {
-				$mainclass = 'bpModBackendActions';
+			if(defined('DOING_AJAX') && DOING_AJAX && 'bpmodfrontend' === $_REQUEST['action']) {
+				$mainclass = 'bpModActions';
 			} else {
-				$mainclass = 'bpModBackend';
+				// if this is an admin page and the current user is not a site admin then the plugin doesn't load at all
+				if (!is_super_admin()) {
+					return;
+				}
+
+				if (!empty($_REQUEST['bpmod-action'])) {
+					$mainclass = 'bpModBackendActions';
+				} else {
+					$mainclass = 'bpModBackend';
+				}
 			}
 		} else {
-			if (!empty($_REQUEST['bpmod-action']) || !empty($_REQUEST['bpmod-ajax'])) {
+			if (!empty($_REQUEST['bpmod-action'])) {
 				$mainclass = 'bpModActions';
 			} else {
 				$mainclass = 'bpModFrontend';
@@ -104,7 +102,7 @@ class bpModLoader
 	 */
 	function loadL10n(){
 		return load_plugin_textdomain('bp-moderation')
-			|| load_plugin_textdomain('bp-moderation', false, plugin_basename(dirname(__FILE__)).'/lang');
+			|| load_plugin_textdomain('bp-moderation', false, self::basename().'/lang');
 	}
 
 	private function call_installer($method, $args = array())
@@ -148,11 +146,67 @@ class bpModLoader
 	}
 
 	/**
-	 * bpModLoader file path
+	 * bpModLoader file path not following symlink
 	 *
 	 * @return string this file path
 	 */
-	function file()
+	static function file()
+	{
+		static $path;
+		if ($path) return $path;
+
+		// not symlinked, great!
+		if(strpos(__FILE__, WP_PLUGIN_DIR) === 0) {
+			return $path = __FILE__;
+		}
+		if(strpos(__FILE__, WPMU_PLUGIN_DIR) === 0) {
+			return $path = __FILE__;
+		}
+
+		// see if we can find this file symbolic path in active plugins
+		$plugins = wp_get_active_and_valid_plugins();
+		if (is_multisite()) {
+			$plugins = array_merge($plugins, array_keys(wp_get_active_network_plugins()));
+		}
+		foreach($plugins as $sympath) {
+			if (realpath($sympath) === __FILE__){
+				return $path = $sympath;
+			}
+		}
+
+		// maybe we are in activation, look in all plugins
+		if (is_admin()) {
+			$plugins = array_keys(get_plugins());
+			foreach($plugins as $relpath) {
+				if (realpath(WP_PLUGIN_DIR.'/'.$relpath) === __FILE__){
+					return $path = WP_PLUGIN_DIR.'/'.$relpath;
+				}
+			}
+		}
+
+		// not found?!
+		return $path = __FILE__;
+	}
+
+	/**
+	 * bpModeration basename plugin folder basename
+	 *
+	 * @return string basename
+	 */
+	static function basename()
+	{
+		static $name;
+		if ($name) return $name;
+
+		return $name = plugin_basename(dirname(self::file()));
+	}
+
+	/**
+	 * bpModLoader real file path
+	 *
+	 * @return string this file path
+	 */
+	static function realfile()
 	{
 		return __FILE__;
 	}
