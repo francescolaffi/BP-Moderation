@@ -455,7 +455,7 @@ class bpModBackend extends bpModeration
 													<br><?php echo $author['contact_link'] ?>
 													<div class="row-actions">
 														<?php		if ($content->item_author && get_userdata($content->item_author)):
-														if (bp_core_is_user_spammer($content->item_author)): ?>
+														if (bp_is_user_spammer($content->item_author)): ?>
 															<a class="unmark-spammer vim-u"
 															   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$content->item_author&set_spam=0", 'mark_unmark_spammer') ?>"
 															   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
@@ -980,7 +980,7 @@ class bpModBackend extends bpModeration
 														<?php		if (!get_userdata($user->user_id)): ?>
 														<span
 															class="not-a-member"><?php _e('Unregistered', 'bp-moderation') ?></span>
-														<?php	 elseif (bp_core_is_user_spammer($user->user_id)): ?>
+														<?php	 elseif (bp_is_user_spammer($user->user_id)): ?>
 														<a class="unmark-spammer vim-u"
 														   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$user->user_id&set_spam=0", 'mark_unmark_spammer') ?>"
 														   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
