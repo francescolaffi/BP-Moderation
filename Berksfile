@@ -1,4 +1,4 @@
-cookbook 'apt'
+cookbook 'apt', '<2' # problem with 2.0
 cookbook 'apache2'
 #cookbook 'phpmyadmin'
 
