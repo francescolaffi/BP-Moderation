@@ -15,6 +15,12 @@ class bpModBackend extends bpModeration
 	 */
 	function  __construct()
 	{
+		if (version_compare(get_site_option('bp_moderation_db_version'), $this->db_ver, '<')) {
+			bpModLoader::load_class('bpModInstaller');
+			$installer = new bpModInstaller();
+			$installer->install();
+		}
+
 		parent::__construct();
 
 		add_action(is_multisite() ? 'network_admin_menu'

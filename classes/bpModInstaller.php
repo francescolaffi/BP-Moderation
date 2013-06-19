@@ -18,11 +18,7 @@ class bpModInstaller extends bpModAbstractCore
 	 */
 	function activate()
 	{
-		$this->checkCompatibleOrFail();
-
-		if (version_compare(get_site_option('bp_moderation_db_version'), $this->db_ver, '<')) {
-			$this->install();
-		}
+		#$this->checkCompatibleOrFail();
 	}
 
 	/**
