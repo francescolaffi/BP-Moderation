@@ -33,8 +33,9 @@
 	background-position: 0 -66px;
 }
 
-.activity-meta .bpm-inner-text {
-	text-decoration: none;
+.activity-meta .bpm-inner-text,
+.acomment-options .bpm-inner-text {
+    text-decoration: none;
 }
 
 /* if there is no text a square button look better */

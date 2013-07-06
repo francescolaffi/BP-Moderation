@@ -50,14 +50,12 @@ Vagrant.configure("2") do |config|
     # $ CHEF_LOG_LEVEL=debug vagrant <provision or up>
     chef.log_level = ENV['CHEF_LOG_LEVEL'] || "info"
 
-    # chef.add_recipe 'apt'
-    chef.add_recipe 'wpcli'
+    chef.add_recipe 'wp'
   
     chef.json = {
-      'wpcli' => {
+      'wp' => {
         'installs' => {
-          'bpmod' => {
-            'url' => 'bpmod.dev',
+          'bpmod.dev' => {
           	'title' => 'bpmod singlesite test',
             'plugins' => {
               'buddypress' => {
@@ -67,11 +65,9 @@ Vagrant.configure("2") do |config|
                 'source' => '/vagrant',
                 'active' => true
               }
-            },
-            'clean-install' => true
+            }
           },
-          'bpmod-network' => {
-          	'url' => 'bpmod-net.dev',
+          'bpmod-network.dev' => {
           	'title' => 'bpmod multisite test',
           	'network' => {
           		'title' => 'bpmod multisite test network'	
@@ -86,24 +82,27 @@ Vagrant.configure("2") do |config|
               	'network' => true,
                 'active' => true
               }
-            },
-            'clean-install' => true
+            }
           },
-          'bpmod-bp18' => {
-            'url' => 'bpmod-bp18.dev',
+          'bpmod-bp18.dev' => {
           	'title' => 'bpmod singlesite bp 1.8-beta test',
             'plugins' => {
               'buddypress' => {
                 'active' => true,
-                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta1.zip'
+                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip'
               },
               'bp-moderation' => {
                 'source' => '/vagrant',
                 'active' => true
               }
-            },
-            'clean-install' => true
+            }
           },
+        },
+        'globals' => {
+          'clean-install' => true,
+          'rewrite' => {
+            'structure' => '/%year%/%monthnum%/%day%/%postname%/'
+          }
         },
         'user' => 'vagrant',
         'group' => 'vagrant',

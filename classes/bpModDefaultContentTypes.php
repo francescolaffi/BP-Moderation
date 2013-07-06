@@ -50,7 +50,7 @@ class bpModDefaultContentTypes
 		if (isset ($init_types['activity_comment'])) {
 			$bpmod->types_map['activity_comment'] = 'activity_comment';
 			add_filter('bp_moderation_activity_loop_link_args_activity_comment', array(__CLASS__, 'activity_correct_ids'));
-			add_action('bp_after_activity_comment', array(__CLASS__, 'activity_comments_print_link'));
+			add_action('bp_activity_comment_options', array(__CLASS__, 'activity_comments_print_link'));
 		}
 
 		//  blog posts
@@ -205,7 +205,7 @@ class bpModDefaultContentTypes
 											 'author_id' => bp_get_activity_comment_user_id(),
 											 'id' => bp_get_activity_comment_id(),
 											 'id2' => bp_get_activity_id(),
-											 'custom_class' => 'bpm-no-images'
+											 'custom_class' => 'bpm-no-images bp-secondary-action'
 										));
 		echo $link;
 	}
