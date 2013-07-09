@@ -26,10 +26,8 @@ class bpModBackendActions extends bpModeration
 
 		if ($in_ajax) {
 			check_ajax_referer($nonce_action);
-			$response_func = array(&$this, 'ajax_' . $action);
 		} else {
 			check_admin_referer($nonce_action);
-			$response_func = array(&$this, 'action_' . $action);
 			$this->redir = remove_query_arg(array('err_ids', 'marked_spammer', 'unmarked_spammer', 'content_ignored', 'content_moderated', 'content_deleted'), wp_get_referer());
 		}
 

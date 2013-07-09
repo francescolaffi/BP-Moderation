@@ -88,8 +88,8 @@ Vagrant.configure("2") do |config|
           	'title' => 'bpmod singlesite bp 1.8-beta test',
             'plugins' => {
               'buddypress' => {
+                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip',
                 'active' => true,
-                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip'
               },
               'bp-moderation' => {
                 'source' => '/vagrant',
@@ -97,12 +97,34 @@ Vagrant.configure("2") do |config|
               }
             }
           },
+          'bpmod-bp18net.dev' => {
+          	'title' => 'bpmod multisite bp 1.8-beta test',
+          	'network' => {
+          		'title' => 'bpmod multisite bp 1.8-beta test network'
+          	},
+            'plugins' => {
+              'buddypress' => {
+                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip',
+              	'network' => true,
+                'active' => true
+              },
+              'bp-moderation' => {
+                'source' => '/vagrant',
+              	'network' => true,
+                'active' => true
+              }
+            }
+          },
         },
         'globals' => {
+          'theme' => 'bp-default',
           'clean-install' => true,
           'rewrite' => {
             'structure' => '/%year%/%monthnum%/%day%/%postname%/'
-          }
+          },
+          'commands' => [
+            'option set avatar_default identicon',
+          ]
         },
         'user' => 'vagrant',
         'group' => 'vagrant',

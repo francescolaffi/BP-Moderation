@@ -55,23 +55,19 @@ class bpModLoader
 	 */
 	function init()
 	{
-		if (is_admin()) {
-			if(defined('DOING_AJAX') && DOING_AJAX && 'bpmodfrontend' === $_REQUEST['action']) {
-				$mainclass = 'bpModActions';
-			} else {
-				// if this is an admin page and the current user is not a site admin then the plugin doesn't load at all
-				if (!is_super_admin()) {
-					return;
-				}
+		if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
+			// if this is an admin page and the current user is not a site admin then the plugin doesn't load at all
+			if (!is_super_admin()) {
+				return;
+			}
 
-				if (!empty($_REQUEST['bpmod-action'])) {
-					$mainclass = 'bpModBackendActions';
-				} else {
-					$mainclass = 'bpModBackend';
-				}
+			if (!empty($_REQUEST['bpmod-action'])) {
+				$mainclass = 'bpModBackendActions';
+			} else {
+				$mainclass = 'bpModBackend';
 			}
 		} else {
-			if (!empty($_REQUEST['bpmod-action'])) {
+			if (!empty($_REQUEST['bpmod-action']) || 'bpmodfrontend' === $_REQUEST['action']) {
 				$mainclass = 'bpModActions';
 			} else {
 				$mainclass = 'bpModFrontend';
