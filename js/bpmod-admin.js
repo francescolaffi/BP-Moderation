@@ -101,7 +101,7 @@ jQuery(document).ready(function($) {
 
     var insert_hotkey_hints = function(scope) {
       $('a', scope).each(function(i) {
-        var key = $(this).attr('class').match(/vim-(\w)/);
+        var key = ($(this).attr('class') || '').match(/vim-(\w)/);
         if (key && key[1])
           $(this).append(' <span class="vim-hint">(' + key[1] + ')</span>');
       });
