@@ -23,8 +23,7 @@ class bpModBackend extends bpModeration
 
 		parent::__construct();
 
-		add_action(is_multisite() ? 'network_admin_menu'
-					   : 'admin_menu', array(&$this, 'add_admin_menu'));
+		add_action(is_multisite() ? 'network_admin_menu' : 'admin_menu', array(&$this, 'add_admin_menu'));
 		add_action('rightnow_end', array(&$this, 'rightnow_widget_section'));
 		add_action('admin_init', array(&$this, 'register_settings'));
 
@@ -40,10 +39,8 @@ class bpModBackend extends bpModeration
 	 */
 	function add_admin_menu()
 	{
-		$hook = add_submenu_page('bp-general-settings',
-								 __('BuddyPress Moderation', 'bp-moderation'),
-								 __('Moderation', 'bp-moderation'), 'manage_options',
-								 'bp-moderation', array(&$this, 'admin_page'));
+		$hook = add_management_page(__('BuddyPress Moderation', 'bp-moderation'), __('BP Moderation', 'bp-moderation'),
+			'manage_options', 'bp-moderation', array(&$this, 'admin_page'));
 
 		add_action("admin_print_styles-$hook", array(&$this, 'admin_css'));
 		add_action("admin_print_scripts-$hook", array(&$this, 'admin_js'));
@@ -65,38 +62,34 @@ class bpModBackend extends bpModeration
 		$sql = "SELECT COUNT(*) FROM {$this->contents_table}";
 
 		if ($awating = (int)$wpdb->get_var("$sql WHERE status IN ('new','warned')")) {
-			$link = 'admin.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][new]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
+			$link = 'tools.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][new]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
 
 			$text .= sprintf(_n(
-								 '<a href="%1$s">%2$d content</a> is awaiting your moderation',
-								 '<a href="%1$s">%2$d contents</a> are awaiting your moderation',
-								 $awating, 'bp-moderation'), $link, $awating
+					'<a href="%1$s">%2$d content</a> is awaiting your moderation',
+					'<a href="%1$s">%2$d contents</a> are awaiting your moderation',
+					$awating, 'bp-moderation'), $link, $awating
 			);
 
 			if ($warned = (int)$wpdb->get_var("$sql WHERE status = 'warned'")) {
-				$link = 'admin.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
+				$link = 'tools.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
 
 				$text .= sprintf(_n(
-									 ' and the owner of <a href="%1$s">%2$d of them</a> has already been warned',
-									 ' and the owners of <a href="%1$s">%2$d of them</a> have already been warned',
-									 $warned, 'bp-moderation'), $link, $warned
+						' and the owner of <a href="%1$s">%2$d of them</a> has already been warned',
+						' and the owners of <a href="%1$s">%2$d of them</a> have already been warned',
+						$warned, 'bp-moderation'), $link, $warned
 				);
 			}
 
 			$text .= '.';
-		}
-		elseif ($total = (int)$wpdb->get_var($sql))
-		{
-			$link = 'admin.php?page=bp-moderation&view=contents';
+		} elseif ($total = (int)$wpdb->get_var($sql)) {
+			$link = 'tools.php?page=bp-moderation&view=contents';
 
 			$text .= sprintf(_n(
-								 'there are no contents awaiting your moderation, <a href="%1$s">%2$d reported content</a> has already been viewed.',
-								 'there are no contents awaiting your moderation, <a href="%1$s">%2$d reported contents</a> have already been viewed.',
-								 $total, 'bp-moderation'), $link, $total
+					'there are no contents awaiting your moderation, <a href="%1$s">%2$d reported content</a> has already been viewed.',
+					'there are no contents awaiting your moderation, <a href="%1$s">%2$d reported contents</a> have already been viewed.',
+					$total, 'bp-moderation'), $link, $total
 			);
-		}
-		else
-		{
+		} else {
 			$text .= __('no content has ever been reported.', 'bp-moderation');
 		}
 
@@ -124,9 +117,9 @@ class bpModBackend extends bpModeration
 		) {
 			wp_enqueue_script('jquery-table-hotkeys');
 			wp_localize_script('bpmod-admin', 'adminBPModL10n', array(
-																	 'hotkeys_highlight_first' => isset($_GET['hotkeys_highlight_first']),
-																	 'hotkeys_highlight_last' => isset($_GET['hotkeys_highlight_last'])
-																));
+				'hotkeys_highlight_first' => isset($_GET['hotkeys_highlight_first']),
+				'hotkeys_highlight_last' => isset($_GET['hotkeys_highlight_last'])
+			));
 		}
 	}
 
@@ -158,7 +151,7 @@ class bpModBackend extends bpModeration
 		$h2 = '<h2 class="nav-tab-wrapper"><span style="margin-right:.5em;">' . __('BP Moderation', 'bp-moderation') . '</span>';
 		foreach ($views as $_view => $title) {
 			$current = ($_view == $view) ? ' nav-tab-active' : '';
-			$h2 .= "<a href='admin.php?page=bp-moderation&amp;view=$_view' class='nav-tab$current'>$title</a>";
+			$h2 .= "<a href='tools.php?page=bp-moderation&amp;view=$_view' class='nav-tab$current'>$title</a>";
 		}
 		$h2 .= "</h2>\n";
 		echo $h2;
@@ -206,343 +199,342 @@ class bpModBackend extends bpModeration
 		$chk = ' checked="checked"';
 		$sel = ' selected="selected"';
 		?>
-	<form id="bpmod-contents-query" class="bpmod-form-query" action="admin.php"
-		  method="get">
-		<input type="hidden" name="page" value="bp-moderation"/>
-		<input type="hidden" name="view" value="contents"/>
-		<fieldset>
-			<legend><?php _e('Custom Query', 'bp-moderation') ?></legend>
-			<div class="column">
-				<h4><?php _e('Filters', 'bp-moderation') ?></h4>
-				<dt>
-					<input
-						id='filter-item_type' <?php echo isset($_GET['filters']['active_filters']['item_type'])
-						? $chk : ''
+		<form id="bpmod-contents-query" class="bpmod-form-query" action="admin.php"
+			  method="get">
+			<input type="hidden" name="page" value="bp-moderation"/>
+			<input type="hidden" name="view" value="contents"/>
+			<fieldset>
+				<legend><?php _e('Custom Query', 'bp-moderation') ?></legend>
+				<div class="column">
+					<h4><?php _e('Filters', 'bp-moderation') ?></h4>
+					<dt>
+						<input
+							id='filter-item_type' <?php echo isset($_GET['filters']['active_filters']['item_type'])
+							? $chk : ''
 						?> name='filters[active_filters][item_type]'
-						type='checkbox'/>
-					<label
-						for='filter-item_type'><?php _e('Content types', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<ul>
-						<?php				foreach ($this->content_types as $slug => $ct) : ?>
-						<li><input
-							id='type_<?php echo $slug ?>'<?php echo isset($_GET['filters']['item_type'][$slug])
-								? $chk : ''
-							?> name='filters[item_type][<?php echo $slug ?>]'
 							type='checkbox'/>
-							<label
-								for='type_<?php echo $slug ?>'><?php echo $ct->label ?></label>
-						</li>
-						<?php	 endforeach ?>
-					</ul>
-				</dd>
-				<dt>
-					<input
-						id='filter-status' <?php echo isset($_GET['filters']['active_filters']['status'])
-						? $chk : ''
+						<label
+							for='filter-item_type'><?php _e('Content types', 'bp-moderation') ?></label>
+					</dt>
+					<dd>
+						<ul>
+							<?php foreach ($this->content_types as $slug => $ct) : ?>
+								<li><input
+										id='type_<?php echo $slug ?>'<?php echo isset($_GET['filters']['item_type'][$slug])
+										? $chk : ''
+									?> name='filters[item_type][<?php echo $slug ?>]'
+										type='checkbox'/>
+									<label
+										for='type_<?php echo $slug ?>'><?php echo $ct->label ?></label>
+								</li>
+							<?php endforeach ?>
+						</ul>
+					</dd>
+					<dt>
+						<input
+							id='filter-status' <?php echo isset($_GET['filters']['active_filters']['status'])
+							? $chk : ''
 						?> name='filters[active_filters][status]'
-						type='checkbox'/>
-					<label
-						for='filter-status'><?php _e('Status', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<ul>
-						<?php				foreach ($this->content_stati as $slug => $label) : ?>
-						<li><input
-							id="<?php echo $slug ?>"<?php echo isset($_GET['filters']['status'][$slug])
-								? $chk : ''
-							?> name="filters[status][<?php echo $slug ?>]"
-							type="checkbox">
-							<label
-								for="<?php echo $slug ?>"><?php echo $label ?></label>
-						</li>
-						<?php	 endforeach ?>
-					</ul>
-				</dd>
-				<dt>
-					<input
-						id='filter-flags' <?php echo isset($_GET['filters']['active_filters']['flags'])
-						? $chk : ''
+							type='checkbox'/>
+						<label
+							for='filter-status'><?php _e('Status', 'bp-moderation') ?></label>
+					</dt>
+					<dd>
+						<ul>
+							<?php foreach ($this->content_stati as $slug => $label) : ?>
+								<li><input
+										id="<?php echo $slug ?>"<?php echo isset($_GET['filters']['status'][$slug])
+										? $chk : ''
+									?> name="filters[status][<?php echo $slug ?>]"
+										type="checkbox">
+									<label
+										for="<?php echo $slug ?>"><?php echo $label ?></label>
+								</li>
+							<?php endforeach ?>
+						</ul>
+					</dd>
+					<dt>
+						<input
+							id='filter-flags' <?php echo isset($_GET['filters']['active_filters']['flags'])
+							? $chk : ''
 						?> name='filters[active_filters][flags]'
-						type='checkbox'/>
-					<label
-						for='filter-flags'><?php _e('Times reported', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<label for='flags'><?php
-					$input = "<input id='flags' size='4' type='text' name='filters[flags]' value='" . (empty($_GET['filters']['flags'])
-						? '0' : $_GET['filters']['flags']) . "' />";
-						echo sprintf(__('Reported at least %s times', 'bp-moderation'), $input); ?></label>
-				</dd>
-				<dt>
-					<input
-						id='filter-item_author' <?php echo isset($_GET['filters']['active_filters']['item_author'])
-						? $chk : ''
+							type='checkbox'/>
+						<label
+							for='filter-flags'><?php _e('Times reported', 'bp-moderation') ?></label>
+					</dt>
+					<dd>
+						<label for='flags'><?php
+							$input = "<input id='flags' size='4' type='text' name='filters[flags]' value='" . (empty($_GET['filters']['flags'])
+									? '0' : $_GET['filters']['flags']) . "' />";
+							echo sprintf(__('Reported at least %s times', 'bp-moderation'), $input); ?></label>
+					</dd>
+					<dt>
+						<input
+							id='filter-item_author' <?php echo isset($_GET['filters']['active_filters']['item_author'])
+							? $chk : ''
 						?> name='filters[active_filters][item_author]'
-						type='checkbox'/>
-					<label
-						for='filter-item_author'><?php _e('Content posted by', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<input id='item_author' class='line' size='40' type='text'
-						   name='filters[item_author]' value='<?php
+							type='checkbox'/>
+						<label
+							for='filter-item_author'><?php _e('Content posted by', 'bp-moderation') ?></label>
+					</dt>
+					<dd>
+						<input id='item_author' class='line' size='40' type='text'
+							   name='filters[item_author]' value='<?php
 						echo empty($_GET['filters']['item_author']) ? ''
-						: $_GET['filters']['item_author'] ?>'/>
-					<label
-						for='item_author'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
-				</dd>
-				<dt>
-					<input
-						id='filter-reporters' <?php echo isset($_GET['filters']['active_filters']['reporters'])
-						? $chk : ''
+							: $_GET['filters']['item_author'] ?>'/>
+						<label
+							for='item_author'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
+					</dd>
+					<dt>
+						<input
+							id='filter-reporters' <?php echo isset($_GET['filters']['active_filters']['reporters'])
+							? $chk : ''
 						?> name='filters[active_filters][reporters]'
-						type='checkbox'/>
-					<label
-						for='filter-reporters'><?php _e('Content reported by', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<input id='reporters' class='line' size='40' type='text'
-						   name='filters[reporters]' value='<?php
+							type='checkbox'/>
+						<label
+							for='filter-reporters'><?php _e('Content reported by', 'bp-moderation') ?></label>
+					</dt>
+					<dd>
+						<input id='reporters' class='line' size='40' type='text'
+							   name='filters[reporters]' value='<?php
 						echo empty($_GET['filters']['reporters']) ? ''
-						: $_GET['filters']['reporters'] ?>'/>
-					<label
-						for='reporters'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
-				</dd>
-			</div>
-			<div class="column">
-				<h4 class="order-by"><?php _e('Order', 'bp-moderation') ?></h4>
-				<ol class="order-by">
-					<?php			$i = 0;
-					while (0 == $i || !empty($_GET['order'][$i])) :
+							: $_GET['filters']['reporters'] ?>'/>
+						<label
+							for='reporters'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
+					</dd>
+				</div>
+				<div class="column">
+					<h4 class="order-by"><?php _e('Order', 'bp-moderation') ?></h4>
+					<ol class="order-by">
+						<?php            $i = 0;
+						while (0 == $i || !empty($_GET['order'][$i])) :
+							?>
+							<li><?php _e('Order by', 'bp-moderation');
+								$orby = empty($_GET['order'][$i]['by']) ? 'none'
+									: $_GET['order'][$i]['by'];
+								$asc = 'DESC' == @$_GET['order'][$i]['dir'] ? 'DESC'
+										: 'ASC'; ?>
+
+								<select name="order[<?php echo $i ?>][by]">
+									<option<?php selected('none', $orby) ?>
+										value="none"><?php _e('none', 'bp-moderation') ?></option>
+									<option<?php selected('flags', $orby) ?>
+										value="flags"><?php _e('times reported', 'bp-moderation') ?></option>
+									<option<?php selected('first_flag', $orby) ?>
+										value="first_flag"><?php _e('first time reported', 'bp-moderation') ?></option>
+									<option<?php selected('last_flag', $orby) ?>
+										value="last_flag"><?php _e('last time reported', 'bp-moderation') ?></option>
+									<option<?php selected('item_id', $orby) ?>
+										value="item_id"><?php _e('item id', 'bp-moderation') ?></option>
+									<option<?php selected('item_id2', $orby) ?>
+										value="item_id2"><?php _e('secondary id', 'bp-moderation') ?></option>
+								</select>
+								<select name="order[<?php echo $i ?>][dir]">
+									<option<?php selected('ASC', $asc) ?>
+										value="ASC">ASC
+									</option>
+									<option<?php selected('DESC', $asc) ?>
+										value="DESC">DESC
+									</option>
+								</select>
+							</li>
+							<?php            $i++;
+						endwhile;
 						?>
-						<li><?php _e('Order by', 'bp-moderation');
-							$orby = empty($_GET['order'][$i]['by']) ? 'none'
-								: $_GET['order'][$i]['by'];
-							$asc = 'DESC' == @$_GET['order'][$i]['dir'] ? 'DESC'
-								: 'ASC'; ?>
+					</ol>
+					<h4><?php _e('Limit', 'bp-moderation') ?></h4>
 
-							<select name="order[<?php echo $i ?>][by]">
-								<option<?php selected('none', $orby) ?>
-									value="none"><?php _e('none', 'bp-moderation') ?></option>
-								<option<?php selected('flags', $orby) ?>
-									value="flags"><?php _e('times reported', 'bp-moderation') ?></option>
-								<option<?php selected('first_flag', $orby) ?>
-									value="first_flag"><?php _e('first time reported', 'bp-moderation') ?></option>
-								<option<?php selected('last_flag', $orby) ?>
-									value="last_flag"><?php _e('last time reported', 'bp-moderation') ?></option>
-								<option<?php selected('item_id', $orby) ?>
-									value="item_id"><?php _e('item id', 'bp-moderation') ?></option>
-								<option<?php selected('item_id2', $orby) ?>
-									value="item_id2"><?php _e('secondary id', 'bp-moderation') ?></option>
-							</select>
-							<select name="order[<?php echo $i ?>][dir]">
-								<option<?php selected('ASC', $asc) ?>
-									value="ASC">ASC
-								</option>
-								<option<?php selected('DESC', $asc) ?>
-									value="DESC">DESC
-								</option>
-							</select>
-						</li>
-						<?php			$i++;
-					endwhile;
-					?>
-				</ol>
-				<h4><?php _e('Limit', 'bp-moderation') ?></h4>
-
-				<p><label for='limit'><?php
-					$input = "<input id='limit' size='4' type='text' name='per_page' value='" . (empty($_GET['per_page'])
-					? '20' : $_GET['per_page']) . "' />";
-					echo sprintf(__('Display at most %s contents', 'bp-moderation'), $input); ?></label>
-				</p>
-				<input name="submit" type="submit" class="button-primary"
-					   value="<?php _e('Query Contents', 'bp-moderation'); ?>"/>
-			</div>
-		</fieldset>
-	</form>
-	<div class="clear"></div>
-									   <?php
-   		extract($this->query_contents());
+					<p><label for='limit'><?php
+							$input = "<input id='limit' size='4' type='text' name='per_page' value='" . (empty($_GET['per_page'])
+									? '20' : $_GET['per_page']) . "' />";
+							echo sprintf(__('Display at most %s contents', 'bp-moderation'), $input); ?></label>
+					</p>
+					<input name="submit" type="submit" class="button-primary"
+						   value="<?php _e('Query Contents', 'bp-moderation'); ?>"/>
+				</div>
+			</fieldset>
+		</form>
+		<div class="clear"></div>
+		<?php
+		extract($this->query_contents());
 
 		if ($total) {
 			$page_links = paginate_links(array(
-											  'base' => add_query_arg('cpage', '%#%'),
-											  'format' => '',
-											  'prev_text' => __('&laquo;'),
-											  'next_text' => __('&raquo;'),
-											  'total' => ceil($total / $per_page),
-											  'current' => $page_index + 1
-										 ));
+				'base' => add_query_arg('cpage', '%#%'),
+				'format' => '',
+				'prev_text' => __('&laquo;'),
+				'next_text' => __('&raquo;'),
+				'total' => ceil($total / $per_page),
+				'current' => $page_index + 1
+			));
 
 			?>
-		<form id="bpmod-contents-form" class="bpmod-bulk-form"
-			  action="admin.php" method="post">
-			<div class="tablenav">
-				<div class="alignleft actions">
-					<select name="bulk-action">
-						<option value="-1"
-								selected="selected"><?php _e('Bulk Actions', 'bp-moderation') ?></option>
-						<option
-							value="ignore"><?php _e('Ignore', 'bp-moderation'); ?></option>
-						<option
-							value="mark_moderated"><?php _e('Mark as moderated', 'bp-moderation'); ?></option>
-						<option
-							value="delete"><?php _e('Delete', 'bp-moderation'); ?></option>
-						<option
-							value="mark_spammer"><?php _e('Mark authors as spammers', 'bp-moderation'); ?></option>
-						<option
-							value="unmark_spammer"><?php _e('Mark authors as not spammers', 'bp-moderation'); ?></option>
-						<!--<option value="authors_in_user_view"><?php _e('View authors in users view', 'bp-moderation'); ?></option>-->
-					</select>
-					<input type="hidden" name="bpmod-action"
-						   value="bulk_contents"/>
-					<?php wp_nonce_field('bulk_contents'); ?>
-					<input type="submit" name="doaction" id="doaction"
-						   value="<?php esc_attr_e('Apply', 'bp-moderation'); ?>"
-						   class="button-secondary apply"/>
+			<form id="bpmod-contents-form" class="bpmod-bulk-form"
+				  action="admin.php" method="post">
+				<div class="tablenav">
+					<div class="alignleft actions">
+						<select name="bulk-action">
+							<option value="-1"
+									selected="selected"><?php _e('Bulk Actions', 'bp-moderation') ?></option>
+							<option
+								value="ignore"><?php _e('Ignore', 'bp-moderation'); ?></option>
+							<option
+								value="mark_moderated"><?php _e('Mark as moderated', 'bp-moderation'); ?></option>
+							<option
+								value="delete"><?php _e('Delete', 'bp-moderation'); ?></option>
+							<option
+								value="mark_spammer"><?php _e('Mark authors as spammers', 'bp-moderation'); ?></option>
+							<option
+								value="unmark_spammer"><?php _e('Mark authors as not spammers', 'bp-moderation'); ?></option>
+							<!--<option value="authors_in_user_view"><?php _e('View authors in users view', 'bp-moderation'); ?></option>-->
+						</select>
+						<input type="hidden" name="bpmod-action"
+							   value="bulk_contents"/>
+						<?php wp_nonce_field('bulk_contents'); ?>
+						<input type="submit" name="doaction" id="doaction"
+							   value="<?php esc_attr_e('Apply', 'bp-moderation'); ?>"
+							   class="button-secondary apply"/>
+					</div>
+					<div class="tablenav-pages"><?php
+						if ($page_links) {
+							echo '<span class="displaying-num">' .
+								sprintf(__('Displaying %s&#8211;%s of %s', 'bp-moderation'),
+									number_format_i18n($page_index * $per_page + 1),
+									number_format_i18n(min(($page_index + 1) * $per_page, $total)),
+									'<span class="total-type-count">' . number_format_i18n($total) . '</span>')
+								. "</span>$page_links";
+						}
+						?></div>
 				</div>
-				<div class="tablenav-pages"><?php
-			if ($page_links) {
-					echo '<span class="displaying-num">' .
-						 sprintf(__('Displaying %s&#8211;%s of %s', 'bp-moderation'),
-								 number_format_i18n($page_index * $per_page + 1),
-								 number_format_i18n(min(($page_index + 1) * $per_page, $total)),
-								 '<span class="total-type-count">' . number_format_i18n($total) . '</span>')
-						 . "</span>$page_links";
-				}
-					?></div>
-			</div>
-			<div class="clear"></div>
-			<table id="bpmod-contents-table" class="widefat bpmod-table fixed"
-				   cellspacing="0">
-				<thead>
-				<tr>
-					<th class="manage-column column-cb check-column"
-						scope="col"><input type="checkbox"></th>
-					<th class="manage-column column-author"
-						scope="col"><?php _e('Author', 'bp-moderation') ?></th>
-					<th class="manage-column column-content"
-						scope="col"><?php _e('Content', 'bp-moderation') ?></th>
-					<th class="manage-column column-flags"
-						scope="col"><?php _e('Flags', 'bp-moderation') ?></th>
-				</tr>
-				</thead>
-				<tfoot>
-				<tr>
-					<th class="manage-column column-cb check-column"
-						scope="col"><input type="checkbox"></th>
-					<th class="manage-column column-author"
-						scope="col"><?php _e('Author', 'bp-moderation') ?></th>
-					<th class="manage-column column-content"
-						scope="col"><?php _e('Content', 'bp-moderation') ?></th>
-					<th class="manage-column column-flags"
-						scope="col"><?php _e('Flags', 'bp-moderation') ?></th>
-				</tr>
-				</tfoot>
+				<div class="clear"></div>
+				<table id="bpmod-contents-table" class="widefat bpmod-table fixed"
+					   cellspacing="0">
+					<thead>
+					<tr>
+						<th class="manage-column column-cb check-column"
+							scope="col"><input type="checkbox"></th>
+						<th class="manage-column column-author"
+							scope="col"><?php _e('Author', 'bp-moderation') ?></th>
+						<th class="manage-column column-content"
+							scope="col"><?php _e('Content', 'bp-moderation') ?></th>
+						<th class="manage-column column-flags"
+							scope="col"><?php _e('Flags', 'bp-moderation') ?></th>
+					</tr>
+					</thead>
+					<tfoot>
+					<tr>
+						<th class="manage-column column-cb check-column"
+							scope="col"><input type="checkbox"></th>
+						<th class="manage-column column-author"
+							scope="col"><?php _e('Author', 'bp-moderation') ?></th>
+						<th class="manage-column column-content"
+							scope="col"><?php _e('Content', 'bp-moderation') ?></th>
+						<th class="manage-column column-flags"
+							scope="col"><?php _e('Flags', 'bp-moderation') ?></th>
+					</tr>
+					</tfoot>
 
-				<tbody>
-											<?php
-	foreach ($results as $content) :
-												$ctype = isset($this->content_types[$content->item_type])
-													? $this->content_types[$content->item_type]
-													: false;
-												$author = $this->author_details($content->item_author, $content);
-												$reporters = join(', ', array_map(array(&$this, 'show_in_users_table_link'), explode(',', $content->reporters)));
-												?>
-											<tr class="status-<?php echo $content->status ?>">
-												<th class="check-column"
-													scope="row"><input
-													type="checkbox"
-													value="<?php echo $content->content_id ?>"
-													name="bulk_items[]"></th>
-												<td class="column-author">
-													<strong><?php echo $author['avatar_img'] . $author['user_link'] ?></strong>
-													<br><?php echo $author['contact_link'] ?>
-													<div class="row-actions">
-														<?php		if ($content->item_author && get_userdata($content->item_author)):
-														if (bp_is_user_spammer($content->item_author)): ?>
-															<a class="unmark-spammer vim-u"
-															   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$content->item_author&set_spam=0", 'mark_unmark_spammer') ?>"
-															   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
-															<?php	 else : ?>
-															<a class="mark-spammer vim-s"
-															   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$content->item_author&set_spam=1", 'mark_unmark_spammer') ?>"
-															   title="<?php _e('Mark the author of this content as spammer', 'bp-moderation') ?>"><?php _e('Mark as spammer', 'bp-moderation') ?></a>
-															<?php			endif;
-													elseif ($content->item_author): ?>
-														<span
-															class="not-a-member"><?php _e('Unregistered', 'bp-moderation') ?></span>
-														<?php	 else: ?>
-														<span
-															class="not-a-member"><?php _e('Not a member', 'bp-moderation') ?></span>
-														<?php		endif; ?>
-													</div>
-												</td>
-												<td class="column-content">
-													<strong><?php _e('Status:', 'bp-moderation') ?></strong> <?php echo $this->content_stati[$content->status]
-													?>
-													<strong><?php _e('Type:', 'bp-moderation') ?></strong> <?php echo $ctype
-													? $ctype->label
-													: $content->item_type . ' (' . __('not found', 'bp-moderation') . ')';
-													?>
-													<strong><?php _e('Item ID:', 'bp-moderation') ?></strong> <?php echo $content->item_id . ($content->item_id2
-													? ' - ' . $content->item_id2
-													: '')
-													?>
-													<strong><?php _e('Date:', 'bp-moderation') ?></strong> <?php echo $this->date_abbr($content->item_date) ?>
+					<tbody>
+					<?php
+					foreach ($results as $content) :
+						$ctype = isset($this->content_types[$content->item_type])
+							? $this->content_types[$content->item_type]
+							: false;
+						$author = $this->author_details($content->item_author, $content);
+						$reporters = join(', ', array_map(array(&$this, 'show_in_users_table_link'), explode(',', $content->reporters)));
+						?>
+						<tr class="status-<?php echo $content->status ?>">
+							<th class="check-column"
+								scope="row"><input
+									type="checkbox"
+									value="<?php echo $content->content_id ?>"
+									name="bulk_items[]"></th>
+							<td class="column-author">
+								<strong><?php echo $author['avatar_img'] . $author['user_link'] ?></strong>
+								<br><?php echo $author['contact_link'] ?>
+								<div class="row-actions">
+									<?php        if ($content->item_author && get_userdata($content->item_author)):
+										if (bp_is_user_spammer($content->item_author)): ?>
+											<a class="unmark-spammer vim-u"
+											   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$content->item_author&set_spam=0", 'mark_unmark_spammer') ?>"
+											   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
+										<?php else : ?>
+											<a class="mark-spammer vim-s"
+											   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$content->item_author&set_spam=1", 'mark_unmark_spammer') ?>"
+											   title="<?php _e('Mark the author of this content as spammer', 'bp-moderation') ?>"><?php _e('Mark as spammer', 'bp-moderation') ?></a>
+										<?php            endif; elseif ($content->item_author): ?>
+										<span
+											class="not-a-member"><?php _e('Unregistered', 'bp-moderation') ?></span>
+									<?php else: ?>
+										<span
+											class="not-a-member"><?php _e('Not a member', 'bp-moderation') ?></span>
+									<?php        endif; ?>
+								</div>
+							</td>
+							<td class="column-content">
+								<strong><?php _e('Status:', 'bp-moderation') ?></strong> <?php echo $this->content_stati[$content->status]
+								?>
+								<strong><?php _e('Type:', 'bp-moderation') ?></strong> <?php echo $ctype
+									? $ctype->label
+									: $content->item_type . ' (' . __('not found', 'bp-moderation') . ')';
+								?>
+								<strong><?php _e('Item ID:', 'bp-moderation') ?></strong> <?php echo $content->item_id . ($content->item_id2
+										? ' - ' . $content->item_id2
+										: '')
+								?>
+								<strong><?php _e('Date:', 'bp-moderation') ?></strong> <?php echo $this->date_abbr($content->item_date) ?>
 
-													<div class="row-actions">
-														<a class="view-content vim-v"
-														   href="<?php echo $content->item_url ?>"
-														   title="<?php _e('View this content', 'bp-moderation') ?>"><?php _e('View', 'bp-moderation') ?></a>
-														<?php			if ('ignored' != $content->status): ?>
-														| <a
-															class="ignore-content vim-a"
-															href="<?php echo wp_nonce_url("admin.php?bpmod-action=ignore&cont_id=$content->content_id", 'ignore') ?>"
-															title="<?php _e('Mark this content as clean', 'bp-moderation') ?>"><?php _e('Ignore', 'bp-moderation') ?></a>
-														<?php			endif;
-														if ($ctype && $ctype->callbacks['edit'] && 'deleted' != $content->status): ?>
-															| <a
-																class="edit-content vim-e"
-																href="<?php echo wp_nonce_url("admin.php?bpmod-action=edit&cont_id=$content->content_id", 'edit') ?>"
-																title="<?php _e('Link to the edit page for this content', 'bp-moderation') ?>"><?php _e('Edit', 'bp-moderation') ?></a>
-															<?php			endif;
-														if ('deleted' != $content->status && 'moderated' != $content->status): ?>
-															| <a
-																class="mark-moderated vim-m"
-																href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_moderated&cont_id=$content->content_id", 'mark_moderated') ?>"
-																title="<?php _e('Manually mark this content as moderated if it has already been edited/deleted without this plugin', 'bp-moderation') ?>"><?php _e('Mark as moderated', 'bp-moderation') ?></a>
-															<?php			endif;
-														if ($ctype && $ctype->callbacks['delete'] && 'deleted' != $content->status): ?>
-															| <a
-																class="delete-content vim-d"
-																href="<?php echo wp_nonce_url("admin.php?bpmod-action=delete&cont_id=$content->content_id", 'delete') ?>"
-																title="<?php _e('Delete this content', 'bp-moderation') ?>"><?php _e('Delete', 'bp-moderation') ?></a>
-															<?php	 endif; ?>
-													</div>
-												</td>
-												<td class="column-flags">
-													<strong><?php _e('Flags:', 'bp-moderation') ?></strong>  <?php echo $content->flags
-													?>
-													<strong><?php _e('First:', 'bp-moderation') ?></strong>  <?php echo $this->date_abbr($content->first_flag)
-													?>
-													<strong><?php _e('Last:', 'bp-moderation') ?></strong>  <?php echo $this->date_abbr($content->last_flag) ?>
+								<div class="row-actions">
+									<a class="view-content vim-v"
+									   href="<?php echo $content->item_url ?>"
+									   title="<?php _e('View this content', 'bp-moderation') ?>"><?php _e('View', 'bp-moderation') ?></a>
+									<?php if ('ignored' != $content->status): ?>
+										| <a
+											class="ignore-content vim-a"
+											href="<?php echo wp_nonce_url("admin.php?bpmod-action=ignore&cont_id=$content->content_id", 'ignore') ?>"
+											title="<?php _e('Mark this content as clean', 'bp-moderation') ?>"><?php _e('Ignore', 'bp-moderation') ?></a>
+									<?php            endif;
+									if ($ctype && $ctype->callbacks['edit'] && 'deleted' != $content->status): ?>
+										| <a
+											class="edit-content vim-e"
+											href="<?php echo wp_nonce_url("admin.php?bpmod-action=edit&cont_id=$content->content_id", 'edit') ?>"
+											title="<?php _e('Link to the edit page for this content', 'bp-moderation') ?>"><?php _e('Edit', 'bp-moderation') ?></a>
+									<?php            endif;
+									if ('deleted' != $content->status && 'moderated' != $content->status): ?>
+										| <a
+											class="mark-moderated vim-m"
+											href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_moderated&cont_id=$content->content_id", 'mark_moderated') ?>"
+											title="<?php _e('Manually mark this content as moderated if it has already been edited/deleted without this plugin', 'bp-moderation') ?>"><?php _e('Mark as moderated', 'bp-moderation') ?></a>
+									<?php            endif;
+									if ($ctype && $ctype->callbacks['delete'] && 'deleted' != $content->status): ?>
+										| <a
+											class="delete-content vim-d"
+											href="<?php echo wp_nonce_url("admin.php?bpmod-action=delete&cont_id=$content->content_id", 'delete') ?>"
+											title="<?php _e('Delete this content', 'bp-moderation') ?>"><?php _e('Delete', 'bp-moderation') ?></a>
+									<?php endif; ?>
+								</div>
+							</td>
+							<td class="column-flags">
+								<strong><?php _e('Flags:', 'bp-moderation') ?></strong>  <?php echo $content->flags
+								?>
+								<strong><?php _e('First:', 'bp-moderation') ?></strong>  <?php echo $this->date_abbr($content->first_flag)
+								?>
+								<strong><?php _e('Last:', 'bp-moderation') ?></strong>  <?php echo $this->date_abbr($content->last_flag) ?>
 
-													<br/><strong><?php _e('Reporters:', 'bp-moderation') ?></strong> <?php echo $reporters ?>
+								<br/><strong><?php _e('Reporters:', 'bp-moderation') ?></strong> <?php echo $reporters ?>
 
-												</td>
-											</tr>
-												<?php
-	endforeach;
-												?>
-				</tbody>
-			</table>
-		</form>
+							</td>
+						</tr>
+					<?php
+					endforeach;
+					?>
+					</tbody>
+				</table>
+			</form>
 
-		<?php $this->print_hotkeys_toggle(); ?>
+			<?php $this->print_hotkeys_toggle(); ?>
 
-											<?php
+		<?php
 
 		} else {
 			_e('No content to display, try a different search', 'bp-moderation');
@@ -626,9 +618,7 @@ class bpModBackend extends bpModeration
 	{
 		if (get_user_option('bp_moderation_hotkeys')) {
 			$text = sprintf(__('Hotkeys are enabled. <a href="%s">Disable</a>'), wp_nonce_url('admin.php?bpmod-action=hotkeys&set_hotkeys=0', 'hotkeys'));
-		}
-		else
-		{
+		} else {
 			$text = sprintf(__('Hotkeys are disabled. <a href="%s">Enable</a>'), wp_nonce_url('admin.php?bpmod-action=hotkeys&set_hotkeys=1', 'hotkeys'));
 		}
 		echo "<p id='hotkeys-toggle'>$text</p>";
@@ -655,18 +645,16 @@ class bpModBackend extends bpModeration
 			foreach ($filters as $f) {
 				if (empty($_GET['filters'][$f])) {
 					continue;
-				}
-				else
-				{
+				} else {
 					$val = $_GET['filters'][$f];
 				}
 
 				switch ($f) {
 					case 'item_type':
 					case 'status':
-					if (!is_array($val)) {
-						continue;
-					}
+						if (!is_array($val)) {
+							continue;
+						}
 						$values = array_keys($val);
 						array_walk($values, array(&$wpdb, 'escape_by_ref'));
 						$where .= " AND $f IN ('" . join("','", $values) . "')";
@@ -709,9 +697,7 @@ class bpModBackend extends bpModeration
 		}
 		if (count($orders)) {
 			$order = 'ORDER BY ' . join(', ', $orders);
-		}
-		else
-		{
+		} else {
 			$order = 'ORDER BY last_flag DESC';
 		}
 
@@ -754,298 +740,298 @@ class bpModBackend extends bpModeration
 		$chk = ' checked="checked"';
 		$sel = ' selected="selected"';
 		?>
-	<form id="bpmod-users-query" class="bpmod-form-query" action="admin.php"
-		  method="get">
-		<input type="hidden" name="page" value="bp-moderation"/>
-		<input type="hidden" name="view" value="users"/>
-		<fieldset>
-			<legend><?php _e('Custom Query', 'bp-moderation') ?></legend>
-			<div class="column">
-				<h4><?php _e('Filters', 'bp-moderation') ?></h4>
-				<dt>
-					<input
-						id='filter-user' <?php echo isset($_GET['active_filters']['user'])
-						? $chk : ''
-						?> name='active_filters[user]' type='checkbox'/>
-					<label
-						for='filter-user'><?php _e('Specific users', 'bp-moderation') ?></label>
-				</dt>
-				<dd>
-					<input id='user' class='line' size='40' type='text'
-						   name='filters[user]' value='<?php
-						echo empty($_GET['filters']['user']) ? ''
-						: $_GET['filters']['user'] ?>'/>
-					<label
-						for='user'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
-				</dd>
-				<?php
-				$filters = array(
-					array(
-						'own_flags',
-						__('Total flags on own contents', 'bp-moderation'),
-						__('Own contents have been flagged for a total of at least %s flags', 'bp-moderation')
-					),
-					array(
-						'own_contents',
-						__('Total own contents reported', 'bp-moderation'),
-						__('Own contents have been reported at least %s times', 'bp-moderation')
-					),
-					array(
-						'own_ignored',
-						__('Ignored own contents', 'bp-moderation'),
-						__('Own contents have been ignored at least %s times', 'bp-moderation')
-					),
-					array(
-						'own_moderated',
-						__('Moderated own contents', 'bp-moderation'),
-						__('Own contents have been moderated at least %s times', 'bp-moderation')
-					),
-					array(
-						'others_contents',
-						__('Total contents reported by user', 'bp-moderation'),
-						__('User has been reported at least %s contents', 'bp-moderation')
-					),
-					array(
-						'others_ignored',
-						__('Ignored contents reported by user', 'bp-moderation'),
-						__('Contents reported by user have been ignored at least %s times', 'bp-moderation')
-					),
-					array(
-						'others_moderated',
-						__('Moderated contents reported by user', 'bp-moderation'),
-						__('Contents reported by user have been moderated at least %s times', 'bp-moderation')
-					)
-				);
-				foreach ($filters as $filter):
-					list($slug, $title, $desc) = $filter;
-					?>
+		<form id="bpmod-users-query" class="bpmod-form-query" action="admin.php"
+			  method="get">
+			<input type="hidden" name="page" value="bp-moderation"/>
+			<input type="hidden" name="view" value="users"/>
+			<fieldset>
+				<legend><?php _e('Custom Query', 'bp-moderation') ?></legend>
+				<div class="column">
+					<h4><?php _e('Filters', 'bp-moderation') ?></h4>
 					<dt>
 						<input
-							id='filter-<?php echo $slug ?>' <?php echo checked('on', @$_GET['active_filters'][$slug])
-							?> name='active_filters[<?php echo $slug ?>]'
-							type='checkbox'/>
+							id='filter-user' <?php echo isset($_GET['active_filters']['user'])
+							? $chk : ''
+						?> name='active_filters[user]' type='checkbox'/>
 						<label
-							for='filter-<?php echo $slug ?>'><?php echo $title ?></label>
+							for='filter-user'><?php _e('Specific users', 'bp-moderation') ?></label>
 					</dt>
 					<dd>
+						<input id='user' class='line' size='40' type='text'
+							   name='filters[user]' value='<?php
+						echo empty($_GET['filters']['user']) ? ''
+							: $_GET['filters']['user'] ?>'/>
 						<label
-							for='<?php echo $slug ?>'><?php echo sprintf($desc,
-																		 "<input id='$slug' size='4' type='text' name='filters[$slug]' value='" . ((int)@$_GET['filters'][$slug]) . "' />"
-						); ?></label>
+							for='user'><?php _e('User ids (comma separeted)', 'bp-moderation') ?></label>
 					</dd>
-
-					<?php	 endforeach; ?>
-			</div>
-			<div class="column">
-				<h4 class="order-by"><?php _e('Order', 'bp-moderation') ?></h4>
-				<ol class="order-by">
-					<?php			$i = 0;
-					while (0 == $i || !empty($_GET['order'][$i])) :
+					<?php
+					$filters = array(
+						array(
+							'own_flags',
+							__('Total flags on own contents', 'bp-moderation'),
+							__('Own contents have been flagged for a total of at least %s flags', 'bp-moderation')
+						),
+						array(
+							'own_contents',
+							__('Total own contents reported', 'bp-moderation'),
+							__('Own contents have been reported at least %s times', 'bp-moderation')
+						),
+						array(
+							'own_ignored',
+							__('Ignored own contents', 'bp-moderation'),
+							__('Own contents have been ignored at least %s times', 'bp-moderation')
+						),
+						array(
+							'own_moderated',
+							__('Moderated own contents', 'bp-moderation'),
+							__('Own contents have been moderated at least %s times', 'bp-moderation')
+						),
+						array(
+							'others_contents',
+							__('Total contents reported by user', 'bp-moderation'),
+							__('User has been reported at least %s contents', 'bp-moderation')
+						),
+						array(
+							'others_ignored',
+							__('Ignored contents reported by user', 'bp-moderation'),
+							__('Contents reported by user have been ignored at least %s times', 'bp-moderation')
+						),
+						array(
+							'others_moderated',
+							__('Moderated contents reported by user', 'bp-moderation'),
+							__('Contents reported by user have been moderated at least %s times', 'bp-moderation')
+						)
+					);
+					foreach ($filters as $filter):
+						list($slug, $title, $desc) = $filter;
 						?>
-						<li><?php _e('Order by', 'bp-moderation');
-							$orby = empty($_GET['order'][$i]['by']) ? 'none'
-								: $_GET['order'][$i]['by'];
-							$asc = 'DESC' == @$_GET['order'][$i]['dir'] ? 'DESC'
-								: 'ASC'; ?>
+						<dt>
+							<input
+								id='filter-<?php echo $slug ?>' <?php echo checked('on', @$_GET['active_filters'][$slug])
+							?> name='active_filters[<?php echo $slug ?>]'
+								type='checkbox'/>
+							<label
+								for='filter-<?php echo $slug ?>'><?php echo $title ?></label>
+						</dt>
+						<dd>
+							<label
+								for='<?php echo $slug ?>'><?php echo sprintf($desc,
+									"<input id='$slug' size='4' type='text' name='filters[$slug]' value='" . ((int)@$_GET['filters'][$slug]) . "' />"
+								); ?></label>
+						</dd>
 
-							<select name="order[<?php echo $i ?>][by]">
-								<option<?php selected('none', $orby) ?>
-									value="none"><?php _e('none', 'bp-moderation') ?></option>
-								<option<?php selected('own_contents', $orby) ?>
-									value="own_contents"><?php _e('total own contents reported', 'bp-moderation') ?></option>
-								<option<?php selected('own_new', $orby) ?>
-									value="own_new"><?php _e('pending own contents') ?></option>
-								<option<?php selected('own_ignored', $orby) ?>
-									value="own_ignored"><?php _e('ignored own contents') ?></option>
-								<option<?php selected('own_moderated', $orby) ?>
-									value="own_moderated"><?php _e('moderated own contents') ?></option>
-								<option<?php selected('own_flags', $orby) ?>
-									value="own_flags"><?php _e('total flags on own contents') ?></option>
-								<option<?php selected('others_contents', $orby) ?>
-									value="others_contents"><?php _e('total contents reported by user', 'bp-moderation') ?></option>
-								<option<?php selected('others_new', $orby) ?>
-									value="others_new"><?php _e('pending contents reported by user', 'bp-moderation') ?></option>
-								<option<?php selected('others_ignored', $orby) ?>
-									value="others_ignored"><?php _e('ignored contents reported by user', 'bp-moderation') ?></option>
-								<option<?php selected('others_moderated', $orby) ?>
-									value="others_moderated"><?php _e('moderated contents reported by user', 'bp-moderation') ?></option>
-							</select>
-							<select name="order[<?php echo $i ?>][dir]">
-								<option<?php selected('ASC', $asc) ?>
-									value="ASC">ASC
-								</option>
-								<option<?php selected('DESC', $asc) ?>
-									value="DESC">DESC
-								</option>
-							</select>
-						</li>
-						<?php			$i++;
-					endwhile;
-					?>
-				</ol>
-				<h4><?php _e('Limit', 'bp-moderation') ?></h4>
+					<?php endforeach; ?>
+				</div>
+				<div class="column">
+					<h4 class="order-by"><?php _e('Order', 'bp-moderation') ?></h4>
+					<ol class="order-by">
+						<?php            $i = 0;
+						while (0 == $i || !empty($_GET['order'][$i])) :
+							?>
+							<li><?php _e('Order by', 'bp-moderation');
+								$orby = empty($_GET['order'][$i]['by']) ? 'none'
+									: $_GET['order'][$i]['by'];
+								$asc = 'DESC' == @$_GET['order'][$i]['dir'] ? 'DESC'
+										: 'ASC'; ?>
 
-				<p><label for='limit'><?php
-					$input = "<input id='limit' size='4' type='text' name='per_page' value='" . (empty($_GET['per_page'])
-					? '20' : $_GET['per_page']) . "' />";
-					echo sprintf(__('Display at most %s users', 'bp-moderation'), $input); ?></label>
-				</p>
-				<input name="submit" type="submit" class="button-primary"
-					   value="<?php _e('Query Users', 'bp-moderation'); ?>"/>
-			</div>
-		</fieldset>
-	</form>
-	<div class="clear"></div>
-													   <?php
-   		extract($this->query_users());
+								<select name="order[<?php echo $i ?>][by]">
+									<option<?php selected('none', $orby) ?>
+										value="none"><?php _e('none', 'bp-moderation') ?></option>
+									<option<?php selected('own_contents', $orby) ?>
+										value="own_contents"><?php _e('total own contents reported', 'bp-moderation') ?></option>
+									<option<?php selected('own_new', $orby) ?>
+										value="own_new"><?php _e('pending own contents') ?></option>
+									<option<?php selected('own_ignored', $orby) ?>
+										value="own_ignored"><?php _e('ignored own contents') ?></option>
+									<option<?php selected('own_moderated', $orby) ?>
+										value="own_moderated"><?php _e('moderated own contents') ?></option>
+									<option<?php selected('own_flags', $orby) ?>
+										value="own_flags"><?php _e('total flags on own contents') ?></option>
+									<option<?php selected('others_contents', $orby) ?>
+										value="others_contents"><?php _e('total contents reported by user', 'bp-moderation') ?></option>
+									<option<?php selected('others_new', $orby) ?>
+										value="others_new"><?php _e('pending contents reported by user', 'bp-moderation') ?></option>
+									<option<?php selected('others_ignored', $orby) ?>
+										value="others_ignored"><?php _e('ignored contents reported by user', 'bp-moderation') ?></option>
+									<option<?php selected('others_moderated', $orby) ?>
+										value="others_moderated"><?php _e('moderated contents reported by user', 'bp-moderation') ?></option>
+								</select>
+								<select name="order[<?php echo $i ?>][dir]">
+									<option<?php selected('ASC', $asc) ?>
+										value="ASC">ASC
+									</option>
+									<option<?php selected('DESC', $asc) ?>
+										value="DESC">DESC
+									</option>
+								</select>
+							</li>
+							<?php            $i++;
+						endwhile;
+						?>
+					</ol>
+					<h4><?php _e('Limit', 'bp-moderation') ?></h4>
+
+					<p><label for='limit'><?php
+							$input = "<input id='limit' size='4' type='text' name='per_page' value='" . (empty($_GET['per_page'])
+									? '20' : $_GET['per_page']) . "' />";
+							echo sprintf(__('Display at most %s users', 'bp-moderation'), $input); ?></label>
+					</p>
+					<input name="submit" type="submit" class="button-primary"
+						   value="<?php _e('Query Users', 'bp-moderation'); ?>"/>
+				</div>
+			</fieldset>
+		</form>
+		<div class="clear"></div>
+		<?php
+		extract($this->query_users());
 
 		if ($total) {
 			$page_links = paginate_links(array(
-											  'base' => add_query_arg('page', '%#%'),
-											  'format' => '',
-											  'prev_text' => __('&laquo;'),
-											  'next_text' => __('&raquo;'),
-											  'total' => ceil($total / $per_page),
-											  'current' => $page_index + 1
-										 ));
+				'base' => add_query_arg('page', '%#%'),
+				'format' => '',
+				'prev_text' => __('&laquo;'),
+				'next_text' => __('&raquo;'),
+				'total' => ceil($total / $per_page),
+				'current' => $page_index + 1
+			));
 
 			?>
-		<form id="bpmod-users-form" class="bpmod-bulk-form" action="admin.php"
-			  method="post">
-			<div class="tablenav">
-				<div class="alignleft actions">
-					<select name="bulk-action">
-						<option value="-1"
-								selected="selected"><?php _e('Bulk Actions', 'bp-moderation') ?></option>
-						<option
-							value="mark_spammer"><?php _e('Mark users as spammers', 'bp-moderation'); ?></option>
-						<option
-							value="unmark_spammer"><?php _e('Mark users as not spammers', 'bp-moderation'); ?></option>
-					</select>
-					<input type="hidden" name="bpmod-action"
-						   value="bulk_users"/>
-					<?php wp_nonce_field('bulk_users'); ?>
-					<input type="submit" name="doaction" id="doaction"
-						   value="<?php esc_attr_e('Apply', 'bp-moderation'); ?>"
-						   class="button-secondary apply"/>
+			<form id="bpmod-users-form" class="bpmod-bulk-form" action="admin.php"
+				  method="post">
+				<div class="tablenav">
+					<div class="alignleft actions">
+						<select name="bulk-action">
+							<option value="-1"
+									selected="selected"><?php _e('Bulk Actions', 'bp-moderation') ?></option>
+							<option
+								value="mark_spammer"><?php _e('Mark users as spammers', 'bp-moderation'); ?></option>
+							<option
+								value="unmark_spammer"><?php _e('Mark users as not spammers', 'bp-moderation'); ?></option>
+						</select>
+						<input type="hidden" name="bpmod-action"
+							   value="bulk_users"/>
+						<?php wp_nonce_field('bulk_users'); ?>
+						<input type="submit" name="doaction" id="doaction"
+							   value="<?php esc_attr_e('Apply', 'bp-moderation'); ?>"
+							   class="button-secondary apply"/>
+					</div>
+					<div class="tablenav-pages"><?php
+						if ($page_links) {
+							echo '<span class="displaying-num">' .
+								sprintf(__('Displaying %s&#8211;%s of %s', 'bp-moderation'),
+									number_format_i18n($page_index * $per_page + 1),
+									number_format_i18n(min(($page_index + 1) * $per_page, $total)),
+									'<span class="total-type-count">' . number_format_i18n($total) . '</span>')
+								. "</span>$page_links";
+						}
+						?></div>
 				</div>
-				<div class="tablenav-pages"><?php
-			if ($page_links) {
-					echo '<span class="displaying-num">' .
-						 sprintf(__('Displaying %s&#8211;%s of %s', 'bp-moderation'),
-								 number_format_i18n($page_index * $per_page + 1),
-								 number_format_i18n(min(($page_index + 1) * $per_page, $total)),
-								 '<span class="total-type-count">' . number_format_i18n($total) . '</span>')
-						 . "</span>$page_links";
-				}
-					?></div>
-			</div>
-			<div class="clear"></div>
-			<table id="bpmod-users-table" class="widefat bpmod-table fixed"
-				   cellspacing="0">
-				<thead>
-				<tr>
-					<th class="manage-column column-cb check-column"
-						scope="col"><input type="checkbox"></th>
-					<th class="manage-column column-author"
-						scope="col"><?php _e('User', 'bp-moderation') ?></th>
-					<th class="manage-column column-own-contents"
-						scope="col"><?php _e('Own contents reported by others', 'bp-moderation') ?></th>
-					<th class="manage-column column-other-contents"
-						scope="col"><?php _e('Contents reported by user', 'bp-moderation') ?></th>
-				</tr>
-				</thead>
-				<tfoot>
-				<tr>
-					<th class="manage-column column-cb check-column"
-						scope="col"><input type="checkbox"></th>
-					<th class="manage-column column-author"
-						scope="col"><?php _e('User', 'bp-moderation') ?></th>
-					<th class="manage-column column-own-contents"
-						scope="col"><?php _e('Own contents reported by others', 'bp-moderation') ?></th>
-					<th class="manage-column column-other-contents"
-						scope="col"><?php _e('Contents reported by user', 'bp-moderation') ?></th>
-				</tr>
-				</tfoot>
+				<div class="clear"></div>
+				<table id="bpmod-users-table" class="widefat bpmod-table fixed"
+					   cellspacing="0">
+					<thead>
+					<tr>
+						<th class="manage-column column-cb check-column"
+							scope="col"><input type="checkbox"></th>
+						<th class="manage-column column-author"
+							scope="col"><?php _e('User', 'bp-moderation') ?></th>
+						<th class="manage-column column-own-contents"
+							scope="col"><?php _e('Own contents reported by others', 'bp-moderation') ?></th>
+						<th class="manage-column column-other-contents"
+							scope="col"><?php _e('Contents reported by user', 'bp-moderation') ?></th>
+					</tr>
+					</thead>
+					<tfoot>
+					<tr>
+						<th class="manage-column column-cb check-column"
+							scope="col"><input type="checkbox"></th>
+						<th class="manage-column column-author"
+							scope="col"><?php _e('User', 'bp-moderation') ?></th>
+						<th class="manage-column column-own-contents"
+							scope="col"><?php _e('Own contents reported by others', 'bp-moderation') ?></th>
+						<th class="manage-column column-other-contents"
+							scope="col"><?php _e('Contents reported by user', 'bp-moderation') ?></th>
+					</tr>
+					</tfoot>
 
-				<tbody>
-											<?php
-	foreach ($results as $user) :
-												$author = $this->author_details($user->user_id);
-												?>
-											<tr class="">
-												<th class="check-column"
-													scope="row"><input
-													type="checkbox"
-													value="<?php echo $user->user_id ?>"
-													name="bulk_items[]"></th>
-												<td class="column-author">
-													<strong><?php echo $author['avatar_img'] . $author['user_link'] ?></strong>
-													<br><?php echo $author['contact_link'] ?>
-													<div class="row-actions">
-														<?php		if (!get_userdata($user->user_id)): ?>
-														<span
-															class="not-a-member"><?php _e('Unregistered', 'bp-moderation') ?></span>
-														<?php	 elseif (bp_is_user_spammer($user->user_id)): ?>
-														<a class="unmark-spammer vim-u"
-														   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$user->user_id&set_spam=0", 'mark_unmark_spammer') ?>"
-														   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
-														<?php	 else : ?>
-														<a class="mark-spammer vim-s"
-														   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$user->user_id&set_spam=1", 'mark_unmark_spammer') ?>"
-														   title="<?php _e('Mark the author of this content as spammer', 'bp-moderation') ?>"><?php _e('Mark as spammer', 'bp-moderation') ?></a>
-														<?php		endif; ?>
-													</div>
-												</td>
-												<td class="column-own-contents">
-													<?php echo sprintf(_n('%d content from this user has been reported', '%d contents from this user have been reported', $user->own_contents, 'bp-moderation'), $user->own_contents);
-													if ($user->own_contents):?>
+					<tbody>
+					<?php
+					foreach ($results as $user) :
+						$author = $this->author_details($user->user_id);
+						?>
+						<tr class="">
+							<th class="check-column"
+								scope="row"><input
+									type="checkbox"
+									value="<?php echo $user->user_id ?>"
+									name="bulk_items[]"></th>
+							<td class="column-author">
+								<strong><?php echo $author['avatar_img'] . $author['user_link'] ?></strong>
+								<br><?php echo $author['contact_link'] ?>
+								<div class="row-actions">
+									<?php if (!get_userdata($user->user_id)): ?>
+										<span
+											class="not-a-member"><?php _e('Unregistered', 'bp-moderation') ?></span>
+									<?php elseif (bp_is_user_spammer($user->user_id)): ?>
+										<a class="unmark-spammer vim-u"
+										   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$user->user_id&set_spam=0", 'mark_unmark_spammer') ?>"
+										   title="<?php _e('Mark the author of this content as not spammer', 'bp-moderation') ?>"><?php _e('Mark as not spammer', 'bp-moderation') ?></a>
+									<?php else : ?>
+										<a class="mark-spammer vim-s"
+										   href="<?php echo wp_nonce_url("admin.php?bpmod-action=mark_unmark_spammer&user_id=$user->user_id&set_spam=1", 'mark_unmark_spammer') ?>"
+										   title="<?php _e('Mark the author of this content as spammer', 'bp-moderation') ?>"><?php _e('Mark as spammer', 'bp-moderation') ?></a>
+									<?php        endif; ?>
+								</div>
+							</td>
+							<td class="column-own-contents">
+								<?php echo sprintf(_n('%d content from this user has been reported', '%d contents from this user have been reported', $user->own_contents, 'bp-moderation'), $user->own_contents);
+								if ($user->own_contents):?>
 
-														<br/>
-														<strong><?php _e('New:', 'bp-moderation') ?></strong> <?php echo $user->own_new;
-														?>
-														<strong><?php _e('Ignored:', 'bp-moderation') ?></strong> <?php echo $user->own_ignored
-														?>
-														<strong><?php _e('Moderated:', 'bp-moderation') ?></strong> <?php echo $user->own_moderated
-														?>
-														<strong><?php _e('Total flags:', 'bp-moderation') ?></strong> <?php echo $user->own_flags;
-													endif; ?>
-													<div class="row-actions">
-														<a class="vim-b"
-														   href="admin.php?page=bp-moderation&amp;view=contents&amp;filters[active_filters][item_author]=on&amp;filters[item_author]=<?php echo $user->user_id ?>"
-														   title="<?php _e('Show the contents from this user that have been reported in the contents view', 'bp-moderation') ?>"><?php _e('Show in contents view', 'bp-moderation') ?></a>
-													</div>
+									<br/>
+									<strong><?php _e('New:', 'bp-moderation') ?></strong> <?php echo $user->own_new;
+									?>
+									<strong><?php _e('Ignored:', 'bp-moderation') ?></strong> <?php echo $user->own_ignored
+									?>
+									<strong><?php _e('Moderated:', 'bp-moderation') ?></strong> <?php echo $user->own_moderated
+									?>
+									<strong><?php _e('Total flags:', 'bp-moderation') ?></strong> <?php echo $user->own_flags;
+								endif; ?>
+								<div class="row-actions">
+									<a class="vim-b"
+									   href="admin.php?page=bp-moderation&amp;view=contents&amp;filters[active_filters][item_author]=on&amp;filters[item_author]=<?php echo $user->user_id ?>"
+									   title="<?php _e('Show the contents from this user that have been reported in the contents view', 'bp-moderation') ?>"><?php _e('Show in contents view', 'bp-moderation') ?></a>
+								</div>
 
-												</td>
-												<td class="column-other-contents">
-													<?php echo sprintf(_n('this user reported %d content', 'this user reported %d contents', $user->others_contents, 'bp-moderation'), $user->others_contents);
-													if ($user->others_contents):?>
+							</td>
+							<td class="column-other-contents">
+								<?php echo sprintf(_n('this user reported %d content', 'this user reported %d contents', $user->others_contents, 'bp-moderation'), $user->others_contents);
+								if ($user->others_contents):?>
 
-														<br/>
-														<strong><?php _e('New:', 'bp-moderation') ?></strong> <?php echo $user->others_new;
-														?>
-														<strong><?php _e('Ignored:', 'bp-moderation') ?></strong> <?php echo $user->others_ignored
-														?>
-														<strong><?php _e('Moderated:', 'bp-moderation') ?></strong> <?php echo $user->others_moderated;
-													endif; ?>
-													<div class="row-actions">
-														<a class="vim-g"
-														   href="admin.php?page=bp-moderation&amp;view=contents&amp;filters[active_filters][reporters]=on&amp;filters[reporters]=<?php echo $user->user_id ?>"
-														   title="<?php _e('Show the contents from this user that have been reported in the contents view', 'bp-moderation') ?>"><?php _e('Show in contents view', 'bp-moderation') ?></a>
-													</div>
+									<br/>
+									<strong><?php _e('New:', 'bp-moderation') ?></strong> <?php echo $user->others_new;
+									?>
+									<strong><?php _e('Ignored:', 'bp-moderation') ?></strong> <?php echo $user->others_ignored
+									?>
+									<strong><?php _e('Moderated:', 'bp-moderation') ?></strong> <?php echo $user->others_moderated;
+								endif; ?>
+								<div class="row-actions">
+									<a class="vim-g"
+									   href="admin.php?page=bp-moderation&amp;view=contents&amp;filters[active_filters][reporters]=on&amp;filters[reporters]=<?php echo $user->user_id ?>"
+									   title="<?php _e('Show the contents from this user that have been reported in the contents view', 'bp-moderation') ?>"><?php _e('Show in contents view', 'bp-moderation') ?></a>
+								</div>
 
-												</td>
-											</tr>
-												<?php
-	endforeach;
-												?>
-				</tbody>
-			</table>
-		</form>
+							</td>
+						</tr>
+					<?php
+					endforeach;
+					?>
+					</tbody>
+				</table>
+			</form>
 
-		<?php $this->print_hotkeys_toggle(); ?>
+			<?php $this->print_hotkeys_toggle(); ?>
 
-											<?php
+		<?php
 
 		} else {
 			_e('No users to display, try a different search', 'bp-moderation');
@@ -1075,9 +1061,7 @@ class bpModBackend extends bpModeration
 			foreach ($filters as $f) {
 				if (empty($_GET['filters'][$f])) {
 					continue;
-				}
-				else
-				{
+				} else {
 					$val = $_GET['filters'][$f];
 				}
 
@@ -1146,9 +1130,7 @@ class bpModBackend extends bpModeration
 		}
 		if (count($orders)) {
 			$order = 'ORDER BY ' . join(', ', $orders);
-		}
-		else
-		{
+		} else {
 			$order = '';
 		}
 
@@ -1348,12 +1330,12 @@ SQL;
 		//$this->add_settings_field('permit_anonym', __( 'Permit Flagging by Anonymous', 'bp-moderation' ),'general', 'checkbox');
 		if ('localhost' == $_SERVER['HTTP_HOST']) {
 			$this->add_settings_field('generate_test_data', __('Generate test data', 'bp-moderation'), 'general', 'checkbox',
-									  array('description' => ' <strong>' . __('NOTE: will destroy all users except #1 — USE ONLY ON WORTHLESS TEST INSTALLS', 'bp-moderation') . '</strong>'));
+				array('description' => ' <strong>' . __('NOTE: will destroy all users except #1 — USE ONLY ON WORTHLESS TEST INSTALLS', 'bp-moderation') . '</strong>'));
 		}
 
 		$this->add_settings_section('content_types', __('Content Types', 'bp-moderation'),
-									__('Choose which content types can be flagged by site members.', 'bp-moderation') . '<br/>' .
-									__('Note: if you deactivate one that was previously active you will still see previously flagged contents of that type in the backend tables.', 'bp-moderation')
+			__('Choose which content types can be flagged by site members.', 'bp-moderation') . '<br/>' .
+			__('Note: if you deactivate one that was previously active you will still see previously flagged contents of that type in the backend tables.', 'bp-moderation')
 		);
 		foreach ($this->content_types as $slug => $ct) {
 			$this->add_settings_field($slug, $ct->label, 'content_types', 'checkbox_content_type');
@@ -1361,9 +1343,9 @@ SQL;
 
 		$this->add_settings_section('automation', __('Automatic Moderation', 'bp-moderation'), __('Automatic warnings and deletion.', 'bp-moderation'));
 		$this->add_settings_field('warning_threshold', __('Automatic warning', 'bp-moderation'), 'automation', 'text',
-								  array('size' => 3, 'sprintf' => __('When a content is flagged %s times send a warning message to the author (0 = disabled).', 'bp-moderation')));
+			array('size' => 3, 'sprintf' => __('When a content is flagged %s times send a warning message to the author (0 = disabled).', 'bp-moderation')));
 		$this->add_settings_field('warning_forward', __('Forward warning', 'bp-moderation'), 'automation', 'text',
-								  array('size' => 60, 'sprintf' => __('Forward the warning also to these addresses (comma separated) <br/>%s', 'bp-moderation')));
+			array('size' => 60, 'sprintf' => __('Forward the warning also to these addresses (comma separated) <br/>%s', 'bp-moderation')));
 		$this->add_settings_field('warning_message', __('Warning message', 'bp-moderation'), 'automation', 'textarea', array('description' => __('
 				<br/>placeholders:
 				<br/>%AUTHORNAME% : content author username
@@ -1376,14 +1358,14 @@ SQL;
 		$this->add_settings_field('clean_up', __('Clean Up on Deactivation', 'bp-moderation'), 'uninstall', 'checkbox');
 
 		?>
-	<form action="#" method="post">
-		<?php wp_nonce_field('bpmod_options'); ?>
-		<?php do_settings_sections(__FILE__); ?>
-		<p class="submit">
-			<input name="Submit" type="submit" class="button-primary"
-				   value="<?php esc_attr_e('Save Changes'); ?>"/>
-		</p>
-	</form>
+		<form action="#" method="post">
+			<?php wp_nonce_field('bpmod_options'); ?>
+			<?php do_settings_sections(__FILE__); ?>
+			<p class="submit">
+				<input name="Submit" type="submit" class="button-primary"
+					   value="<?php esc_attr_e('Save Changes'); ?>"/>
+			</p>
+		</form>
 	<?php
 	}
 
@@ -1496,9 +1478,9 @@ COUNT(DISTINCT c2.content_id, IF(c2.status='new',1,NULL)) as others_new,
 COUNT(DISTINCT c2.content_id, IF(c2.status='ignored',1,NULL)) as others_ignored,
 COUNT(DISTINCT c2.content_id, IF(c2.status IN('edited','deleted','moderated'),1,NULL)) as others_moderated
 FROM (
-	( SELECT DISTINCT item_author AS user_id FROM wp_bp_mod_contents WHERE item_author>0 )
-	UNION
-	( SELECT DISTINCT reporter_id AS user_id FROM wp_bp_mod_flags WHERE reporter_id>0 )
+( SELECT DISTINCT item_author AS user_id FROM wp_bp_mod_contents WHERE item_author>0 )
+UNION
+( SELECT DISTINCT reporter_id AS user_id FROM wp_bp_mod_flags WHERE reporter_id>0 )
 )user_ids
 LEFT JOIN ( wp_bp_mod_contents c1 NATURAL JOIN wp_bp_mod_flags f1) ON(user_ids.user_id = c1.item_author)
 LEFT JOIN ( wp_bp_mod_contents c2 NATURAL JOIN wp_bp_mod_flags f2) ON(user_ids.user_id = f2.reporter_id)
@@ -1516,9 +1498,9 @@ COUNT(DISTINCT c2.content_id, IF(c2.status='new',1,NULL)) as others_new,
 COUNT(DISTINCT c2.content_id, IF(c2.status='ignored',1,NULL)) as others_ignored,
 COUNT(DISTINCT c2.content_id, IF(c2.status IN('edited','deleted','moderated'),1,NULL)) as others_moderated
 FROM (
-	( SELECT DISTINCT item_author AS user_id FROM wp_bp_mod_contents WHERE item_author>0 )
-	UNION
-	( SELECT DISTINCT reporter_id AS user_id FROM wp_bp_mod_flags WHERE reporter_id>0 )
+( SELECT DISTINCT item_author AS user_id FROM wp_bp_mod_contents WHERE item_author>0 )
+UNION
+( SELECT DISTINCT reporter_id AS user_id FROM wp_bp_mod_flags WHERE reporter_id>0 )
 )user_ids
 LEFT JOIN wp_bp_mod_contents c1 ON ( user_ids.user_id = c1.item_author )
 LEFT JOIN wp_bp_mod_flags f1 ON ( c1.content_id = f1.content_id )
