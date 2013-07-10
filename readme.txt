@@ -2,9 +2,9 @@
 Contributors: francescolaffi
 Donate link: http://flweb.it/
 Tags: buddypress, moderation
-Requires at least: WP 3.2.1, BP 1.5
-Tested up to: WP 3.2.1, BP 1.5
-Stable tag: 0.1.4
+Requires at least: WP 3.5, BP 1.7
+Tested up to: WP 3.5.3, BP 1.7.3
+Stable tag: 0.1.7
 
 Adds links/buttons to flag inappropriate content and gives a convenient way to
 moderators to view reports and take actions.
@@ -50,7 +50,7 @@ then select the "Settings" tab on the top.
 
 = Where do flags show up? =
 
-Flags show up in "BuddyPress > Moderation" from the Wordpress admin menu.
+Flags show up in "Tools > Moderation" from the Wordpress admin menu.
 Read the "Moderator panel" section of this guide for more information.
 
 = How can I use keyboard shortcuts? =
@@ -73,6 +73,9 @@ Read the "Moderator panel > Hotkeys" section of this guide.
 = 0.1.5 =
 * bp 1.5 compatibility
 
+= 0.1.7 =
+* bp 1.7 compatibility
+
 
 == Upgrade Notice ==
 
@@ -91,6 +94,9 @@ wp 3.1 compatibility: tested with wp3.1+bp1.2.8, not tested with previous versio
 = 0.1.5 =
 bp 1.5 compatibility
 
+= 0.1.7 =
+moderation admin page moved under Tools
+
 == Screenshots ==
 
 1. **Activity Loop Integration** — contents can be flagged directly from the activity that represent them
@@ -99,7 +105,7 @@ bp 1.5 compatibility
 
 
 == Moderator panel ==
-You can access the backend panel from the "BuddyPress > Moderation" link in your
+You can access the backend panel from the "Tools > Moderation" link in your
 Wordpress admin menu.
 
 There are three tabs on the top: "contents", "users", "settings".
