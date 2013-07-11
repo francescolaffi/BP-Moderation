@@ -64,7 +64,7 @@ span.links-separator {
 	display: none;
 }
 
-a + span.links-separator {
+#topic-post-list .admin-links a + span.links-separator {
 	display: inline;
 }
 

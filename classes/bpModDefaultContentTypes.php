@@ -125,7 +125,7 @@ class bpModDefaultContentTypes
 
 		//  forum topic
 		$bpmod->content_types['forum_topic'] = new stdClass();
-		$bpmod->content_types['forum_topic']->label = __('Forum topic', 'bp-moderation');
+		$bpmod->content_types['forum_topic']->label = __('Legacy Forum topic', 'bp-moderation');
 		$bpmod->content_types['forum_topic']->callbacks = array(
 			'info' => array(__CLASS__, 'forum_topic_info'),
 			'edit' => array(__CLASS__, 'forum_topic_edit'),
@@ -138,7 +138,7 @@ class bpModDefaultContentTypes
 
 		//  forum post
 		$bpmod->content_types['forum_post'] = new stdClass();
-		$bpmod->content_types['forum_post']->label = __('Forum post', 'bp-moderation');
+		$bpmod->content_types['forum_post']->label = __('Legacy Forum post', 'bp-moderation');
 		$bpmod->content_types['forum_post']->callbacks = array(
 			'info' => array(__CLASS__, 'forum_post_info'),
 			'edit' => array(__CLASS__, 'forum_post_edit'),
@@ -619,7 +619,7 @@ class bpModDefaultContentTypes
 											 'custom_class' => 'bpm-no-images'
 										));
 
-		echo "$link | ";
+		echo "<span class='links-separator'> | </span>$link";
 	}
 	
 
