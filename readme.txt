@@ -2,9 +2,11 @@
 Contributors: francescolaffi
 Donate link: http://flweb.it/
 Tags: buddypress, moderation
-Requires at least: WP 3.5, BP 1.7
+Requires at least: WP 3.5, BP 1.7, PHP 5.3
 Tested up to: WP 3.5.3, BP 1.7.3
 Stable tag: 0.1.7
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Adds links/buttons to flag inappropriate content and gives a convenient way to
 moderators to view reports and take actions.
@@ -80,6 +82,7 @@ Read the "Moderator panel > Hotkeys" section of this guide.
 
 = 0.1.7 =
 * bp 1.7 compatibility
+* requires PHP 5.3
 
 
 == Upgrade Notice ==
@@ -100,7 +103,8 @@ wp 3.1 compatibility: tested with wp3.1+bp1.2.8, not tested with previous versio
 bp 1.5 compatibility
 
 = 0.1.7 =
-moderation admin moved in its own menu page
+Requires PHP 5.3
+Moderation page has now a top-level menu item
 
 == Screenshots ==
 
