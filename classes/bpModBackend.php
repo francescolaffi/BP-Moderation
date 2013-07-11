@@ -24,6 +24,7 @@ class bpModBackend extends bpModeration
 		parent::__construct();
 
 		add_action(is_multisite() ? 'network_admin_menu' : 'admin_menu', array(&$this, 'add_admin_menu'));
+		add_action('admin_head', array(&$this, 'print_page_icon_style'));
 		add_action('rightnow_end', array(&$this, 'rightnow_widget_section'));
 		add_action('admin_init', array(&$this, 'register_settings'));
 
@@ -39,11 +40,27 @@ class bpModBackend extends bpModeration
 	 */
 	function add_admin_menu()
 	{
-		$hook = add_management_page(__('BuddyPress Moderation', 'bp-moderation'), __('BP Moderation', 'bp-moderation'),
-			'manage_options', 'bp-moderation', array(&$this, 'admin_page'));
+		$hook = add_menu_page(__('BuddyPress Moderation', 'bp-moderation'), __('BP Moderation', 'bp-moderation'),
+			'manage_options', 'bp-moderation', array(&$this, 'admin_page'), 'div');
 
 		add_action("admin_print_styles-$hook", array(&$this, 'admin_css'));
 		add_action("admin_print_scripts-$hook", array(&$this, 'admin_js'));
+	}
+
+	function print_page_icon_style()
+	{
+		echo <<<HTML
+<style>
+ul#adminmenu li.toplevel_page_bp-moderation .wp-menu-image {
+    background-image: url('{$this->plugin_url}/css/sprite.png');
+    background-position: 6px 5px;
+}
+ul#adminmenu li.toplevel_page_bp-moderation:hover .wp-menu-image,
+ul#adminmenu li.toplevel_page_bp-moderation.current .wp-menu-image {
+    background-position: 6px -61px;
+}
+</style>
+HTML;
 	}
 
 	/**
@@ -62,7 +79,7 @@ class bpModBackend extends bpModeration
 		$sql = "SELECT COUNT(*) FROM {$this->contents_table}";
 
 		if ($awating = (int)$wpdb->get_var("$sql WHERE status IN ('new','warned')")) {
-			$link = 'tools.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][new]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
+			$link = 'admin.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][new]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
 
 			$text .= sprintf(_n(
 					'<a href="%1$s">%2$d content</a> is awaiting your moderation',
@@ -71,7 +88,7 @@ class bpModBackend extends bpModeration
 			);
 
 			if ($warned = (int)$wpdb->get_var("$sql WHERE status = 'warned'")) {
-				$link = 'tools.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
+				$link = 'admin.php?page=bp-moderation&view=contents&filters[active_filters][status]=on&filters[status][warned]=on&order[0][by]=last_flag&order[0][dir]=DESC&per_page=20&submit=1';
 
 				$text .= sprintf(_n(
 						' and the owner of <a href="%1$s">%2$d of them</a> has already been warned',
@@ -82,7 +99,7 @@ class bpModBackend extends bpModeration
 
 			$text .= '.';
 		} elseif ($total = (int)$wpdb->get_var($sql)) {
-			$link = 'tools.php?page=bp-moderation&view=contents';
+			$link = 'admin.php?page=bp-moderation&view=contents';
 
 			$text .= sprintf(_n(
 					'there are no contents awaiting your moderation, <a href="%1$s">%2$d reported content</a> has already been viewed.',
@@ -151,7 +168,7 @@ class bpModBackend extends bpModeration
 		$h2 = '<h2 class="nav-tab-wrapper"><span style="margin-right:.5em;">' . __('BP Moderation', 'bp-moderation') . '</span>';
 		foreach ($views as $_view => $title) {
 			$current = ($_view == $view) ? ' nav-tab-active' : '';
-			$h2 .= "<a href='tools.php?page=bp-moderation&amp;view=$_view' class='nav-tab$current'>$title</a>";
+			$h2 .= "<a href='admin.php?page=bp-moderation&amp;view=$_view' class='nav-tab$current'>$title</a>";
 		}
 		$h2 .= "</h2>\n";
 		echo $h2;

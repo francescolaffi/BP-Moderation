@@ -50,7 +50,7 @@ then select the "Settings" tab on the top.
 
 = Where do flags show up? =
 
-Flags show up in "Tools > Moderation" from the Wordpress admin menu.
+Flags show up in "BP Moderation" from the Wordpress admin menu.
 Read the "Moderator panel" section of this guide for more information.
 
 = How can I use keyboard shortcuts? =
@@ -95,7 +95,7 @@ wp 3.1 compatibility: tested with wp3.1+bp1.2.8, not tested with previous versio
 bp 1.5 compatibility
 
 = 0.1.7 =
-moderation admin page moved under Tools
+moderation admin moved in its own menu page
 
 == Screenshots ==
 
@@ -105,7 +105,7 @@ moderation admin page moved under Tools
 
 
 == Moderator panel ==
-You can access the backend panel from the "Tools > Moderation" link in your
+You can access the backend panel from the "BP Moderation" link in your
 Wordpress admin menu.
 
 There are three tabs on the top: "contents", "users", "settings".
