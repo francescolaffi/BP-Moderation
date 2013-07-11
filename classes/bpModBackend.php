@@ -455,8 +455,9 @@ HTML;
 					<?php
 					foreach ($results as $content) :
 						$ctype = isset($this->content_types[$content->item_type])
-							? $this->content_types[$content->item_type]
-							: false;
+							? $this->content_types[$content->item_type] : false;
+
+						$content = apply_filters("bp_moderation_filter_content_backend_for_$content->item_type", $content);
 						$author = $this->author_details($content->item_author, $content);
 						$reporters = join(', ', array_map(array(&$this, 'show_in_users_table_link'), explode(',', $content->reporters)));
 						?>

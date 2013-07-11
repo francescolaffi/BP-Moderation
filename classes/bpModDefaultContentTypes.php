@@ -151,6 +151,32 @@ class bpModDefaultContentTypes
 			add_filter('bp_moderation_activity_loop_link_args_new_forum_topic', array(__CLASS__, 'forum_post_convert_activity_args'));
 			add_action('bp_group_forum_post_meta', array(__CLASS__, 'forum_post_print_link'));
 		}
+	
+                
+		//  private message sender
+		$bpmod->content_types['private_message_sender'] = new stdClass();
+		$bpmod->content_types['private_message_sender']->label = __('Private message sender', 'bp-moderation');
+		$bpmod->content_types['private_message_sender']->callbacks = array(
+			'info' => array(__CLASS__, 'member_info'),
+			'edit' => array(__CLASS__, 'member_edit'),
+			'delete' => array(__CLASS__, 'member_delete')
+		);
+		if (isset ($init_types['private_message_sender'])) {
+			add_action('bp_after_message_thread_list', array(__CLASS__, 'private_message_sender_print_links'));
+		}
+		
+		//  private message
+		$bpmod->content_types['private_message'] = new stdClass();
+		$bpmod->content_types['private_message']->label = __('Private message', 'bp-moderation');
+		$bpmod->content_types['private_message']->callbacks = array(
+			'info' => array(__CLASS__, 'private_message_info'),
+			'delete' => array(__CLASS__, 'private_message_delete')
+		);
+		if (isset ($init_types['private_message'])) {
+			add_action('bp_after_message_thread_list', array(__CLASS__, 'private_message_print_links'));
+		}
+		add_filter('bp_moderation_filter_content_backend_for_private_message', array(__CLASS__, 'private_message_view_link_override'));
+		add_action('messages_action_view_message', array(__CLASS__, 'private_message_super_admin_override'));
 
 
 		//  load custom content types
@@ -594,6 +620,129 @@ class bpModDefaultContentTypes
 										));
 
 		echo "$link | ";
+	}
+	
+
+/*******************************************************************************
+ * Private message sender
+ */
+	function private_message_sender_print_links()
+	{
+		$report_links = array();
+		foreach((array)$GLOBALS['thread_template']->thread->sender_ids as $sender_id) {
+			if ($sender_id != bp_loggedin_user_id()) {
+				$report_links[] = bpModFrontend::get_link(array(
+										'type' => 'member',
+										'id' => $sender_id,
+										'unflagged_text' => bp_core_get_user_displayname($sender_id),
+										'flagged_text' => bp_core_get_user_displayname($sender_id),
+										'custom_class' => 'button'
+									));
+			}
+		}
+		
+		if (!count($report_links)) {
+			return;
+		}
+		
+		echo '<p class="bp-mod-pm-thread-links">';
+		printf(__('Flag sender as inappropriate: %s', 'bp-moderation'),join(' ', $report_links));
+		echo '</p>';
+	}
+
+	
+/*******************************************************************************
+ * Private message
+ */
+	function private_message_info($thread_id, $sender_id)
+	{
+		$thread = new BP_Messages_Thread($thread_id, 'DESC');
+		if (!in_array($sender_id, $thread->sender_ids)) {
+			return false;
+		}
+		$url = bp_core_get_user_domain($sender_id) . bp_get_messages_slug() . '/view/' . $thread_id;
+		
+		foreach ((array) $thread->messages as $msg) {
+			if ($sender_id == $msg->sender_id) {
+				return array('author' => $sender_id, 'url' => $url, 'date' => $msg->date_sent);
+			}
+		}
+		
+		return false;
+	}
+
+	function private_message_delete($thread_id, $sender_id)
+	{
+		global $wpdb, $bp;
+
+		$delete_for_user = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = %d AND user_id = %d", $thread_id, $sender_id) );
+
+		// Check to see if any more recipients remain for this message
+		// if not, then delete the message from the database.
+		$recipients = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND is_deleted = 0", $thread_id ) );
+
+		if ( empty( $recipients ) ) {
+			// Delete all the messages
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+
+			// Delete all the recipients
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ) );
+		}
+
+		return true;
+	}
+
+	function private_message_print_links()
+	{
+		$report_links = array();
+		foreach((array)$GLOBALS['thread_template']->thread->sender_ids as $sender_id) {
+			if ($sender_id != bp_loggedin_user_id()) {
+				$report_links[] = bpModFrontend::get_link(array(
+										'type' => 'private_message',
+										'id' => bp_get_the_thread_id(),
+										'id2' => $sender_id,
+										'unflagged_text' => bp_core_get_user_displayname($sender_id),
+										'flagged_text' => bp_core_get_user_displayname($sender_id),
+										'custom_class' => 'button'
+									));
+			}
+		}
+		
+		if (!count($report_links)) {
+			return;
+		}
+		
+		echo '<p class="bp-mod-pm-thread-links">';
+		printf(__('Flag as inappropriate messages by: %s', 'bp-moderation'),join(' ', $report_links));
+		echo '</p>';
+	}
+	
+	function private_message_view_link_override($content) {
+		$content->item_url = wp_nonce_url($content->item_url.'?bpmSuperAdminOverridePrivateMessage', 'bpmSuperAdminOverridePrivateMessage');
+		return $content;
+	}
+	
+	function private_message_super_admin_override() {
+		if(!isset($_GET['bpmSuperAdminOverridePrivateMessage']) || !is_super_admin()) {
+			return;
+		}
+		check_admin_referer('bpmSuperAdminOverridePrivateMessage');
+
+		$thread_id = (int)bp_action_variable( 0 );
+
+		bp_core_new_subnav_item( array(
+			'name'            => sprintf( __( 'Review message by %s', 'bp-moderation' ), bp_get_displayed_user_username() ),
+			'slug'            => 'view',
+			'parent_url'      => trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ),
+			'parent_slug'     => bp_get_messages_slug(),
+			'screen_function' => true,
+			'position'        => 40,
+			'user_has_access' => is_super_admin(),
+			'link'            => bp_displayed_user_domain() . bp_get_messages_slug() . '/view/' . (int) $thread_id
+		) );
+
+		bp_core_load_template( apply_filters( 'messages_template_view_message', 'members/single/home' ) );
+		die();
 	}
 }
 

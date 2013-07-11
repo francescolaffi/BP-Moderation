@@ -24,6 +24,11 @@ Another table show members, how many posts from them have been reported/moderate
 how many posts have they reported and moderated from admin. Here find bad/good
 members and take action on them.
 
+Note on private messages:
+* private message sender: reporting this will flag the sender, not the thread, but the admin is not able to see the messages, effective against bulk spammer
+* private message: in this case a sender is reported in a specific thread, the admin can see the messages, more useful for moderation (eg k-12 communities)
+the latter is a bit hackish and could be less solid on future bp upgrades, the first one is based on apis that should be more stable
+
 Use [the plugin group on buddypress.org](http://buddypress.org/community/groups/bp-moderation/)
 for support and discussion.
 

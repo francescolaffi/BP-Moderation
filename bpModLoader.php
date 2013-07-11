@@ -116,8 +116,7 @@ class bpModLoader
 	 */
 	function call_activate()
 	{
-		$args = func_get_args();
-        $this->call_installer('activate', $args);
+		$this->call_installer('activate', func_get_args());
 	}
 
 	/**
@@ -125,8 +124,7 @@ class bpModLoader
 	 */
 	function call_deactivate()
 	{
-		$args = func_get_args();
-		$this->call_installer('deactivate', $args);
+		$this->call_installer('deactivate', func_get_args());
 	}
 
 	/**

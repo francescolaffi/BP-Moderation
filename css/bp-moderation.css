@@ -67,3 +67,10 @@ span.links-separator {
 a + span.links-separator {
 	display: inline;
 }
+
+p.bp-mod-pm-thread-links {
+	margin: 20px 0;
+}
+p.bp-mod-pm-thread-links span.bpm-inner-text {
+	text-decoration: none;
+}
