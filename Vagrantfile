@@ -55,10 +55,11 @@ Vagrant.configure("2") do |config|
     chef.json = {
       'wp' => {
         'installs' => {
-          'bpmod.dev' => {
-          	'title' => 'bpmod singlesite test',
+          'bpmod-bp17.dev' => {
+          	'title' => 'bpmod bp17 singlesite test',
             'plugins' => {
               'buddypress' => {
+                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.7.3.zip',
                 'active' => true
               },
               'bp-moderation' => {
@@ -67,13 +68,14 @@ Vagrant.configure("2") do |config|
               }
             }
           },
-          'bpmod-network.dev' => {
-          	'title' => 'bpmod multisite test',
+          'bpmod-bp17ms.dev' => {
+          	'title' => 'bpmod bp17 multisite test',
           	'network' => {
           		'title' => 'bpmod multisite test network'	
           	},
             'plugins' => {
               'buddypress' => {
+                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.7.3.zip',
               	'network' => true,
                 'active' => true
               },
@@ -85,10 +87,10 @@ Vagrant.configure("2") do |config|
             }
           },
           'bpmod-bp18.dev' => {
-          	'title' => 'bpmod singlesite bp 1.8-beta test',
+          	'title' => 'bpmod bp17 singlesite test',
             'plugins' => {
               'buddypress' => {
-                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip',
+                'version' => '1.8',
                 'active' => true,
               },
               'bp-moderation' => {
@@ -97,14 +99,14 @@ Vagrant.configure("2") do |config|
               }
             }
           },
-          'bpmod-bp18net.dev' => {
+          'bpmod-bp18ms.dev' => {
           	'title' => 'bpmod multisite bp 1.8-beta test',
           	'network' => {
           		'title' => 'bpmod multisite bp 1.8-beta test network'
           	},
             'plugins' => {
               'buddypress' => {
-                'zip' => 'http://downloads.wordpress.org/plugin/buddypress.1.8-beta2.zip',
+                'version' => '1.8',
               	'network' => true,
                 'active' => true
               },

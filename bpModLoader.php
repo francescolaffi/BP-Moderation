@@ -9,7 +9,7 @@ Author URI: http://flweb.it
 License: GPL2
 Network: true
 Text Domain: bp-moderation
-Domain Path: /lang
+Domain Path: /lang/
 */
 
 /*  Copyright 2011  Francesco Laffi  (email : francesco.laffi@gmail.com)
