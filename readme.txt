@@ -3,7 +3,7 @@ Contributors: francescolaffi
 Donate link: http://flweb.it/
 Tags: buddypress, moderation
 Requires at least: WP 3.5, BP 1.7, PHP 5.3
-Tested up to: WP 3.5.3, BP 1.7.3
+Tested up to: WP 3.5.3, BP 1.8.0
 Stable tag: 0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,7 +31,7 @@ Note on private messages:
 * private message: in this case a sender is reported in a specific thread, the admin can see the messages, more useful for moderation (eg k-12 communities)
 the latter is a bit hackish and could be less solid on future bp upgrades, the first one is based on apis that should be more stable
 
-Use [the plugin group on buddypress.org](http://buddypress.org/community/groups/bp-moderation/)
+Use [support forum on wordpress.org](http://wordpress.org/support/plugin/bp-moderation)
 for support and discussion.
 
 The default style uses one icon from http://www.famfamfam.com/lab/icons/silk/
@@ -81,7 +81,7 @@ Read the "Moderator panel > Hotkeys" section of this guide.
 * bp 1.5 compatibility
 
 = 0.1.7 =
-* bp 1.7 compatibility
+* bp 1.7 and 1.8 compatibility
 * requires PHP 5.3
 
 

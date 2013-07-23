@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/bp-moderation 0.1\n"
-"POT-Creation-Date: 2013-07-17 17:16:21+00:00\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bp-moderation\n"
+"POT-Creation-Date: 2013-07-23 15:27:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -104,14 +104,20 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: classes/bpModBackend.php:93
-msgid " and the owner of <a href=\"%1$s\">%2$d of them</a> has already been warned"
-msgid_plural " and the owners of <a href=\"%1$s\">%2$d of them</a> have already been warned"
+msgid ""
+" and the owner of <a href=\"%1$s\">%2$d of them</a> has already been warned"
+msgid_plural ""
+" and the owners of <a href=\"%1$s\">%2$d of them</a> have already been warned"
 msgstr[0] ""
 msgstr[1] ""
 
 #: classes/bpModBackend.php:104
-msgid "there are no contents awaiting your moderation, <a href=\"%1$s\">%2$d reported content</a> has already been viewed."
-msgid_plural "there are no contents awaiting your moderation, <a href=\"%1$s\">%2$d reported contents</a> have already been viewed."
+msgid ""
+"there are no contents awaiting your moderation, <a href=\"%1$s\">%2$d "
+"reported content</a> has already been viewed."
+msgid_plural ""
+"there are no contents awaiting your moderation, <a href=\"%1$s\">%2$d "
+"reported contents</a> have already been viewed."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -371,7 +377,9 @@ msgid "Edit"
 msgstr ""
 
 #: classes/bpModBackend.php:525
-msgid "Manually mark this content as moderated if it has already been edited/deleted without this plugin"
+msgid ""
+"Manually mark this content as moderated if it has already been edited/"
+"deleted without this plugin"
 msgstr ""
 
 #: classes/bpModBackend.php:531
@@ -423,7 +431,9 @@ msgid "See more details on this user in the users table"
 msgstr ""
 
 #: classes/bpModBackend.php:611
-msgid "This user is not registered anymore, but you can still see some details on it in the users table"
+msgid ""
+"This user is not registered anymore, but you can still see some details on "
+"it in the users table"
 msgstr ""
 
 #: classes/bpModBackend.php:638
@@ -581,7 +591,8 @@ msgid "Total flags:"
 msgstr ""
 
 #: classes/bpModBackend.php:1020 classes/bpModBackend.php:1038
-msgid "Show the contents from this user that have been reported in the contents view"
+msgid ""
+"Show the contents from this user that have been reported in the contents view"
 msgstr ""
 
 #: classes/bpModBackend.php:1020 classes/bpModBackend.php:1038
@@ -619,7 +630,8 @@ msgid "Generate test data"
 msgstr ""
 
 #: classes/bpModBackend.php:1351
-msgid "NOTE: will destroy all users except #1 — USE ONLY ON WORTHLESS TEST INSTALLS"
+msgid ""
+"NOTE: will destroy all users except #1 — USE ONLY ON WORTHLESS TEST INSTALLS"
 msgstr ""
 
 #: classes/bpModBackend.php:1354
@@ -631,7 +643,9 @@ msgid "Choose which content types can be flagged by site members."
 msgstr ""
 
 #: classes/bpModBackend.php:1356
-msgid "Note: if you deactivate one that was previously active you will still see previously flagged contents of that type in the backend tables."
+msgid ""
+"Note: if you deactivate one that was previously active you will still see "
+"previously flagged contents of that type in the backend tables."
 msgstr ""
 
 #: classes/bpModBackend.php:1362
@@ -647,7 +661,9 @@ msgid "Automatic warning"
 msgstr ""
 
 #: classes/bpModBackend.php:1364
-msgid "When a content is flagged %s times send a warning message to the author (0 = disabled)."
+msgid ""
+"When a content is flagged %s times send a warning message to the author (0 = "
+"disabled)."
 msgstr ""
 
 #: classes/bpModBackend.php:1365
@@ -678,7 +694,9 @@ msgid "Uninstall"
 msgstr ""
 
 #: classes/bpModBackend.php:1375
-msgid "If you check the field below all plugin data will be erased on plugin deactivation."
+msgid ""
+"If you check the field below all plugin data will be erased on plugin "
+"deactivation."
 msgstr ""
 
 #: classes/bpModBackend.php:1376
@@ -791,7 +809,9 @@ msgid "You are using WordPress %s, please upgrade."
 msgstr ""
 
 #: classes/bpModInstaller.php:155
-msgid " Please install <a href=\"http://buddypress.org/\" target=\"_blank\" >Buddypress</a>."
+msgid ""
+" Please install <a href=\"http://buddypress.org/\" target=\"_blank\" "
+">Buddypress</a>."
 msgstr ""
 
 #: classes/bpModInstaller.php:157
@@ -799,9 +819,23 @@ msgid "You are using BuddyPress %s, please upgrade."
 msgstr ""
 
 #: classes/bpModInstaller.php:164
-msgid "BuddyPress Moderation require at least WordPress %1$s and BuddyPress %2$s to work."
+msgid ""
+"BuddyPress Moderation require at least WordPress %1$s and BuddyPress %2$s to "
+"work."
 msgstr ""
 
 #: examples/bpMod_ContentType_BlogPostExample.php:43
 msgid "Blog post example"
+msgstr ""
+
+#: vendor/wordpress/i18n-tools/pomo/sample/app.php:56
+msgid "Welcome %s!"
+msgstr ""
+
+#: vendor/wordpress/i18n-tools/pomo/sample/app.php:60
+msgid "A string with low priority!"
+msgstr ""
+
+#: vendor/wordpress/i18n-tools/pomo/sample/app.php:62
+msgid "Bye\n"
 msgstr ""

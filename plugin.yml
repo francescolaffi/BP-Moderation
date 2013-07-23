@@ -1,0 +1,4 @@
+slug: bp-moderation
+pot-location: lang/
+version-locations:
+  classes/bpModAbstractCore.php: /var \$plugin_ver = \'(?<vers>.+)\';/

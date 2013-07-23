@@ -1,3 +1,6 @@
-.vagrant
-.kitchen
-Berksfile.lock
+/.vagrant/
+/.kitchen/
+/Berksfile.lock
+/composer.lock
+/vendor/
+/bin/

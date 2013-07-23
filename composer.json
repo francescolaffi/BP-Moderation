@@ -1,0 +1,31 @@
+{
+    "name": "francescolaffi/bp-moderation",
+    "description": "BuddyPress Moderation Plugin",
+    "authors": [
+        {
+            "name": "Francesco Laffi",
+            "email": "francesco.laffi@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/francescolaffi/wp-plugin-dev-tools/"
+        },
+        {
+            "type": "composer",
+            "url": "https://raw.github.com/francescolaffi/wp-plugin-dev-tools/master/"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "francescolaffi/wp-plugin-dev-tools": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "config": {
+        "bin-dir": "bin"
+    },
+    "archive": {
+        "exclude": ["/repo-assets/", "/Berksfile", "/Vagrantfile"]
+    }
+}

@@ -126,6 +126,7 @@ Vagrant.configure("2") do |config|
           },
           'commands' => [
             'option set avatar_default identicon',
+            'user create user user@example.com --role=editor --user_pass=pw'
           ]
         },
         'user' => 'vagrant',
