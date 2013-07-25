@@ -7,7 +7,6 @@ Version: 0.1.7
 Author: Francesco Laffi
 Author URI: http://flweb.it
 License: GPL2
-Network: true
 Text Domain: bp-moderation
 Domain Path: /lang/
 */

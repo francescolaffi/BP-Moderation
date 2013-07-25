@@ -23,7 +23,7 @@ class bpModBackend extends bpModeration
 
 		parent::__construct();
 
-		add_action(is_multisite() ? 'network_admin_menu' : 'admin_menu', array(&$this, 'add_admin_menu'));
+		add_action(bp_core_admin_hook(), array(&$this, 'add_admin_menu'));
 		add_action('admin_head', array(&$this, 'print_page_icon_style'));
 		add_action('rightnow_end', array(&$this, 'rightnow_widget_section'));
 		add_action('admin_init', array(&$this, 'register_settings'));
