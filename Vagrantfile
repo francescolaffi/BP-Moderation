@@ -1,9 +1,13 @@
-#!/usr/bin/env ruby
-#^syntax detection
-
 Vagrant.configure("2") do |config|
   config.vm.box = 'precise32'
   config.vm.box_url = 'http://files.vagrantup.com/precise32.box'
+
+  # enable cache with vagrant-cachier
+  if defined?(VagrantPlugins::Cachier)
+    config.cache.auto_detect = true
+    config.cache.enable :chef
+    config.cache.enable_nfs  = (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
+  end
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -26,34 +30,39 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant",
     :nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
 
+
+  config.vm.synced_folder "../wp-cli", "/custom-wpcli"
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
-  
+
   config.vm.provider :virtualbox do |vb|
     # Don't boot with headless mode
     # vb.gui = true
-  
+
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--memory", "512"]
   end
-  
+
   # View the documentation for the provider you're using for more
   # information on available options.
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
-  
+
   config.vm.provision :chef_solo do |chef|
     # chef debug level, start vagrant like this to debug:
     # $ CHEF_LOG_LEVEL=debug vagrant <provision or up>
     chef.log_level = ENV['CHEF_LOG_LEVEL'] || "info"
 
     chef.add_recipe 'wp'
-  
+
     chef.json = {
       'wp' => {
+        'wpcli-custom-repo' => '/custom-wpcli',
+        'wpcli-version' => '@dev',
         'installs' => {
           'bpmod-bp17.dev' => {
           	'title' => 'bpmod bp17 singlesite test',
@@ -71,7 +80,7 @@ Vagrant.configure("2") do |config|
           'bpmod-bp17ms.dev' => {
           	'title' => 'bpmod bp17 multisite test',
           	'network' => {
-          		'title' => 'bpmod multisite test network'	
+          		'title' => 'bpmod bp17 multisite test network'
           	},
             'plugins' => {
               'buddypress' => {
@@ -87,7 +96,7 @@ Vagrant.configure("2") do |config|
             }
           },
           'bpmod-bp18.dev' => {
-          	'title' => 'bpmod bp17 singlesite test',
+          	'title' => 'bpmod bp18 singlesite test',
             'plugins' => {
               'buddypress' => {
                 'version' => '1.8',
@@ -100,9 +109,9 @@ Vagrant.configure("2") do |config|
             }
           },
           'bpmod-bp18ms.dev' => {
-          	'title' => 'bpmod multisite bp 1.8-beta test',
+          	'title' => 'bpmod multisite bp18 test',
           	'network' => {
-          		'title' => 'bpmod multisite bp 1.8-beta test network'
+          		'title' => 'bpmod multisite bp18 test network'
           	},
             'plugins' => {
               'buddypress' => {
@@ -120,7 +129,15 @@ Vagrant.configure("2") do |config|
         },
         'globals' => {
           'theme' => 'bp-default',
-          'clean-install' => true,
+          'clean-install' => false,
+          'plugins' => {
+              'debug-bar' => {
+                'active' => true
+              },
+              'debug-bar-console' => {
+                'active' => true
+              }
+          },
           'rewrite' => {
             'structure' => '/%year%/%monthnum%/%day%/%postname%/'
           },

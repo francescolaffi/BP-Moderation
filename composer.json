@@ -1,6 +1,11 @@
 {
     "name": "francescolaffi/bp-moderation",
     "description": "BuddyPress Moderation Plugin",
+    "version": "0.1.8-dev",
+    "type": "wordpress-plugin",
+    "keywords": ["buddypress", "moderation"],
+    "homepage": "http://wordpress.org/plugins/bp-moderation/",
+    "license": "GPL-2.0",
     "authors": [
         {
             "name": "Francesco Laffi",
@@ -15,11 +20,37 @@
         {
             "type": "composer",
             "url": "https://raw.github.com/francescolaffi/wp-plugin-dev-tools/master/"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "wordpress/wordpress",
+                "version": "3.5.0",
+                "source": {
+                    "url": "http://core.svn.wordpress.org",
+                    "type": "svn",
+                    "reference": "tags/3.5"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "buddypress/buddypress",
+                "version": "1.7.0",
+                "source": {
+                    "url": "http://buddypress.svn.wordpress.org",
+                    "type": "svn",
+                    "reference": "tags/1.7"
+                }
+            }
         }
     ],
     "require": {},
     "require-dev": {
-        "francescolaffi/wp-plugin-dev-tools": "dev-master"
+        "francescolaffi/wp-plugin-dev-tools": "dev-master",
+        "wordpress/wordpress": "3.5.0",
+        "buddypress/buddypress": "1.7.0"
     },
     "minimum-stability": "dev",
     "config": {
