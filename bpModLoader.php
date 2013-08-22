@@ -97,7 +97,7 @@ class bpModLoader
 	 *
 	 * @return bool if a translation was found and loaded
 	 */
-	function loadL10n(){
+	private function loadL10n(){
 		return load_plugin_textdomain('bp-moderation')
 			|| load_plugin_textdomain('bp-moderation', false, $this->basename.'/lang');
 	}
@@ -131,7 +131,7 @@ class bpModLoader
 	 *
 	 * @param string $cname classname
 	 */
-	function load_class($cname)
+	public static function load_class($cname)
 	{
 		if (class_exists($cname)) {
 			return;

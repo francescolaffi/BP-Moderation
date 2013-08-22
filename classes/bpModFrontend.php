@@ -183,7 +183,7 @@ class bpModFrontend extends bpModeration
 	 *
 	 * @see bpModFrontend::generate_link for args details
 	 */
-	function link($args = '')
+	public static function link($args = '')
 	{
 		echo bpModFrontend::get_link($args);
 	}
@@ -195,7 +195,7 @@ class bpModFrontend extends bpModeration
 	 *
 	 * @see bpModFrontend::generate_link for args details
 	 */
-	function get_link($args = '')
+	public static function get_link($args = '')
 	{
 		$_this =& bpModeration::get_istance();
 		return $_this->generate_link($args);

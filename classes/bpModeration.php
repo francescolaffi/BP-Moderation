@@ -108,25 +108,22 @@ class bpModeration extends bpModAbstractCore
 	 * why $_istance is an array? Zend 1 engine (php4) can't store a reference in
 	 * a static var, but can store it as a value of a static array
 	 */
-	function &get_istance($cname = false)
+	public static function &get_istance($cname = false)
 	{
-		static $_instance = null;
+		static $instance = null;
 
-		if (null === $_instance && $cname) {
-
+		if (null === $instance && $cname) {
 			bpModLoader::load_class($cname);
-			$ref = & new $cname;
-
-			$_instance = array(&$ref);
+			$instance = new $cname;
 		}
 
-		return $_instance[0];
+		return $instance;
 	}
 
 	/**
 	 * for getting proprierties from outside a bpModeration child
 	 */
-	function get_property($name)
+	public static function get_property($name)
 	{
 		$_this = & bpModeration::get_istance();
 
@@ -142,7 +139,7 @@ class bpModeration extends bpModAbstractCore
 	/**
 	 * for getting options from outside a bpModeration child
 	 */
-	function get_option($name)
+	public static function get_option($name)
 	{
 		$_this = & bpModeration::get_istance();
 
@@ -183,7 +180,7 @@ class bpModeration extends bpModAbstractCore
 	 * @param array $activity_types activity types that correspond to this content type
 	 * @return bool false if passed args are invalid
 	 */
-	function register_content_type($slug, $label, $callbacks, $activity_types = null)
+	public static function register_content_type($slug, $label, $callbacks, $activity_types = null)
 	{
 		$_this = & bpModeration::get_istance();
 
