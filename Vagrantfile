@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
           	'title' => 'bpmod bp18 singlesite test',
             'plugins' => {
               'buddypress' => {
-                'version' => '1.8',
+                'version' => '1.8.1',
                 'active' => true,
               },
               'bp-moderation' => {
@@ -115,7 +115,7 @@ Vagrant.configure("2") do |config|
           	},
             'plugins' => {
               'buddypress' => {
-                'version' => '1.8',
+                'version' => '1.8.1',
               	'network' => true,
                 'active' => true
               },
@@ -131,10 +131,7 @@ Vagrant.configure("2") do |config|
           'theme' => 'bp-default',
           'clean-install' => false,
           'plugins' => {
-              'debug-bar' => {
-                'active' => true
-              },
-              'debug-bar-console' => {
+              'developer' => {
                 'active' => true
               }
           },
@@ -142,6 +139,7 @@ Vagrant.configure("2") do |config|
             'structure' => '/%year%/%monthnum%/%day%/%postname%/'
           },
           'commands' => [
+            'developer install-plugins --type=wporg --activate',
             'option set avatar_default identicon',
             'user create user user@example.com --role=editor --user_pass=pw'
           ]
