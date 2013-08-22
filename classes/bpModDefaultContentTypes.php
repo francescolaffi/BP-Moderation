@@ -178,6 +178,11 @@ class bpModDefaultContentTypes
 		add_filter('bp_moderation_filter_content_backend_for_private_message', array(__CLASS__, 'private_message_view_link_override'));
 		add_action('messages_action_view_message', array(__CLASS__, 'private_message_super_admin_override'));
 
+		// load bp docs integration
+		if (defined('BP_DOCS_VERSION') && version_compare(BP_DOCS_VERSION, '1.4.5', '>=')) {
+			bpModLoader::load_class('bpModDocsContentType');
+			new bpModDocsContentType();
+		}
 
 		//  load custom content types
 		if (defined('BPMOD_LOAD_CUSTOM_CONTENT_TYPES') && BPMOD_LOAD_CUSTOM_CONTENT_TYPES) {
