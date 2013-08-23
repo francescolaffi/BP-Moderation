@@ -43,7 +43,7 @@ class bpModDefaultContentTypes
 		$bpmod->content_types['activity_comment']->label = __('Activity comment', 'bp-moderation');
 		//callbacks are the same of status updates because both content types stay in the activity table
 		$bpmod->content_types['activity_comment']->callbacks = array(
-			'info' => array(__CLASS__, 'activity_info'),
+			'info' => array(__CLASS__, 'activity_comment_info'),
 			'delete' => array(__CLASS__, 'activity_delete')
 		);
 
@@ -206,9 +206,22 @@ class bpModDefaultContentTypes
 			return false;
 		}
 
-		$url = bp_core_get_root_domain() . '/' . BP_ACTIVITY_SLUG . '/p/' . $id . '/';
+		$url = bp_activity_get_permalink($id, $act);
 
 		return array('author' => $act->user_id, 'url' => $url, 'date' => $act->date_recorded);
+	}
+
+	function activity_comment_info($id, $id2)
+	{
+		$comm = new BP_Activity_Activity($id);
+
+		if (empty($comm->user_id)) {
+			return false;
+		}
+
+		$url = bp_activity_get_permalink($id2).'#acomment-'.$id;
+
+		return array('author' => $comm->user_id, 'url' => $url, 'date' => $comm->date_recorded);
 	}
 
 	function activity_delete($id, $id2)
@@ -333,7 +346,7 @@ class bpModDefaultContentTypes
 		}
 
 		$url = home_url("?p=$comment->comment_post_ID#comment-$id2");
-		$user = get_user_by_email($comment->comment_author_email);
+		$user = get_user_by('email', $comment->comment_author_email);
 		$author = (int)$user->ID;
 
 		restore_current_blog();
