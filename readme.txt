@@ -3,8 +3,8 @@ Contributors: francescolaffi
 Donate link: http://flweb.it/
 Tags: buddypress, moderation
 Requires at least: WP 3.5, BP 1.7, PHP 5.3
-Tested up to: WP 3.5.3, BP 1.8.0
-Stable tag: 0.1.7
+Tested up to: WP 3.6, BP 1.8.1
+Stable tag: 0.1.8-dev
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,10 @@ Read the "Moderator panel > Hotkeys" section of this guide.
 * bp 1.7 and 1.8 compatibility
 * requires PHP 5.3
 
+= 0.1.8 =
+* integration with buddypress-docs
+* works with wp multisite with bp installed on secondary site
+* fix activity comments url and doesn't use cached urls
 
 == Upgrade Notice ==
 
