@@ -504,7 +504,7 @@ HTML;
 
 								<div class="row-actions">
 									<a class="view-content vim-v"
-									   href="<?php echo $content->item_url ?>"
+									   href="<?php echo wp_nonce_url("admin.php?bpmod-action=view&cont_id=$content->content_id", 'view') ?>"
 									   title="<?php _e('View this content', 'bp-moderation') ?>"><?php _e('View', 'bp-moderation') ?></a>
 									<?php if ('ignored' != $content->status): ?>
 										| <a

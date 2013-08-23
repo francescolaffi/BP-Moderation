@@ -129,7 +129,7 @@ class bpModBackendActions extends bpModeration
 	 * @param <bool> $is_spam mark spammer (true) or unmark (false)
 	 * @param <callback> $end_callback function to execute after marking/unmarking, after this bpcore will redirect back & die
 	 */
-        
+
         function set_spammer_status($user_ids, $is_spam, $end_callback) {
             global $wpdb;
 
@@ -221,6 +221,40 @@ class bpModBackendActions extends bpModeration
 	function handle_bulk_contents_mark_moderated()
 	{
 		$this->bulk_loop_callback(array(&$this, 'handle_mark_moderated'), 'content_moderated');
+	}
+
+	/**** view redirect ***********************************************************/
+	function handle_view()
+	{
+		if (empty($_REQUEST['cont_id'])) {
+			return false;
+		}
+
+		bpModLoader::load_class('bpModObjContent');
+		$cont = new bpModObjContent($_REQUEST['cont_id']);
+
+		if (!$cont->content_id) {
+			return false;
+		}
+
+		$infoCb = $this->content_types[$cont->item_type]->callbacks['info'];
+
+		if (is_callable($infoCb) && ($info = call_user_func($infoCb, $cont->item_id, $cont->item_id2))) {
+			return $info['url'];
+		} else {
+			return $cont->item_url;
+		}
+	}
+
+	function action_view($result)
+	{
+		if ($result) {
+			bp_core_redirect($result);
+		}
+		else
+		{
+			bp_core_redirect($this->redir);
+		}
 	}
 
 	/**** edit redirect ***********************************************************/
