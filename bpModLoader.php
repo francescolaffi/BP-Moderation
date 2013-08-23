@@ -66,7 +66,7 @@ class bpModLoader
 				$mainclass = 'bpModBackend';
 			}
 		} else {
-			if (!empty($_REQUEST['bpmod-action']) || 'bpmodfrontend' === $_REQUEST['action']) {
+			if (!empty($_REQUEST['bpmod-action']) || (!empty($_REQUEST['action']) && 'bpmodfrontend' === $_REQUEST['action'])) {
 				$mainclass = 'bpModActions';
 			} else {
 				$mainclass = 'bpModFrontend';
