@@ -3,7 +3,7 @@ jQuery(function($) {
   var currentRequests = new Array();
 
   /** Flag/Unflag ***************************************************************/
-  $('a.bpm-report-link').click(function() {
+  $(document).on('click', 'a.bpm-report-link',function(ev) {
     var link = $(this);
     var inner = link.children('.bpm-inner-text');
 
@@ -71,7 +71,7 @@ jQuery(function($) {
 
       inner.addClass('ajax-loader');
 
-    return false;
+    return false; // stop propagation and prevent default
   });
 
 });
