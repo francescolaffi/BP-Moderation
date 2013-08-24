@@ -1,25 +1,22 @@
-var jq = jQuery;
+jQuery(function($) {
 
-var bpmod_current_requests = new Array()
-
-jq(document).ready(function() {
+  var currentRequests = new Array();
 
   /** Flag/Unflag ***************************************************************/
-  jq('a.bpm-report-link').click(function() {
-    var link = jq(this);
+  $('a.bpm-report-link').click(function() {
+    var link = $(this);
     var inner = link.children('.bpm-inner-text');
-
-    inner.addClass('ajax-loader');
 
     var href = link.attr('href');
     var data = href.replace(/[^?]*\?(.*)/, '$1&action=bpmodfrontend');
 
-    if (bpmod_current_requests[data])
+    if (currentRequests[data]) {
       return false;
-    else
-      bpmod_current_requests[data] = true;
+    } else {
+        currentRequests[data] = true;
+    }
 
-    jq.post(ajaxurl, data,
+    $.post(ajaxurl, data,
       function(response) {
 
         link.fadeOut(100, function() {
@@ -65,12 +62,14 @@ jq(document).ready(function() {
           }
 
           inner.removeClass('ajax-loader');
-          jq(this).fadeIn(100);
+          $(this).fadeIn(100);
 
-          bpmod_current_requests[data] = false;
+          currentRequests[data] = false;
         });
 
       }, 'json');
+
+      inner.addClass('ajax-loader');
 
     return false;
   });
