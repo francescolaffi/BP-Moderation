@@ -15,7 +15,7 @@ class bpModAbstractCore
 	 *
 	 * @var string
 	 */
-	var $plugin_ver = '0.1.7';
+	var $plugin_ver = '0.1.8-dev';
 
 	/**
 	 * database tables & options version
@@ -31,14 +31,14 @@ class bpModAbstractCore
 	 *
 	 * @var string
 	 */
-	var $min_wp_ver = '3.2';
+	var $min_wp_ver = '3.5';
 
 	/**
 	 * required version of buddypress
 	 *
 	 * @var string
 	 */
-	var $min_bp_ver = '1.5';
+	var $min_bp_ver = '1.7';
 
 	/**
 	 * Name of the db table where reported contents are stored

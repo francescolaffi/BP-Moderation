@@ -3,7 +3,7 @@
 Plugin Name: BuddyPress Moderation
 Plugin URI: http://buddypress.org/community/groups/bp-moderation/
 Description: Plugin for moderation of buddypress communities, it adds a 'report this' link to every content so members can help admin finding inappropriate content.
-Version: 0.1.7
+Version: 0.1.8-dev
 Author: Francesco Laffi
 Author URI: http://flweb.it
 License: GPL2
