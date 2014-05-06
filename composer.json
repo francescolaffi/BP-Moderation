@@ -1,7 +1,7 @@
 {
     "name": "francescolaffi/bp-moderation",
     "description": "BuddyPress Moderation Plugin",
-    "version": "0.1.8-dev",
+    "version": "1.0-dev",
     "type": "wordpress-plugin",
     "keywords": ["buddypress", "moderation"],
     "homepage": "http://wordpress.org/plugins/bp-moderation/",
@@ -14,22 +14,14 @@
     ],
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/francescolaffi/wp-plugin-dev-tools/"
-        },
-        {
-            "type": "composer",
-            "url": "https://raw.github.com/francescolaffi/wp-plugin-dev-tools/master/"
-        },
-        {
             "type": "package",
             "package": {
                 "name": "wordpress/wordpress",
-                "version": "3.5.0",
+                "version": "3.9",
                 "source": {
-                    "url": "http://core.svn.wordpress.org",
+                    "url": "https://core.svn.wordpress.org",
                     "type": "svn",
-                    "reference": "tags/3.5"
+                    "reference": "tags/3.9"
                 }
             }
         },
@@ -37,26 +29,22 @@
             "type": "package",
             "package": {
                 "name": "buddypress/buddypress",
-                "version": "1.7.0",
+                "version": "2.0",
                 "source": {
-                    "url": "http://buddypress.svn.wordpress.org",
+                    "url": "https://buddypress.svn.wordpress.org",
                     "type": "svn",
-                    "reference": "tags/1.7"
+                    "reference": "tags/2.0"
                 }
             }
         }
     ],
     "require": {},
     "require-dev": {
-        "francescolaffi/wp-plugin-dev-tools": "dev-master",
-        "wordpress/wordpress": "3.5.0",
-        "buddypress/buddypress": "1.7.0"
+        "wordpress/wordpress": "*",
+        "buddypress/buddypress": "*"
     },
     "minimum-stability": "dev",
     "config": {
         "bin-dir": "bin"
-    },
-    "archive": {
-        "exclude": ["/repo-assets/", "/Berksfile", "/Vagrantfile"]
     }
 }
