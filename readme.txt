@@ -2,9 +2,9 @@
 Contributors: francescolaffi
 Donate link: http://flweb.it/
 Tags: buddypress, moderation
-Requires at least: WP 3.5, BP 1.7, PHP 5.3
-Tested up to: WP 3.6, BP 1.8.1
-Stable tag: 0.1.8-dev
+Requires at least: WP 3.7, PHP 5.3
+Tested up to: WP 3.9, BP 2.0
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
