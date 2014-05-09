@@ -12,6 +12,8 @@ namespace BPModeration\Lib;
  */
 abstract class DAO
 {
+    const SQL_DATETIME_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * @var string
      */
@@ -23,10 +25,15 @@ abstract class DAO
     protected static $idField;
 
     /**
+     *
      * @var array field => format
      */
     protected static $formats = array();
 
+    public function getID()
+    {
+        return $this->{static::$idField};
+    }
 
     /**
      * Store data with insert/update

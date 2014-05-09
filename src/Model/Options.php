@@ -47,4 +47,8 @@ class Options
 	{
 		unset($this->options[$key]);
 	}
+
+    public function delete() {
+        return delete_site_option(self::OPT_NAME);
+    }
 }
