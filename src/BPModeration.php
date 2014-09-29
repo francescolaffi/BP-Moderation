@@ -18,10 +18,28 @@ class BPModeration
 
     private $options;
 
+    private $lifecycle;
+
     public function __construct()
     {
         $this->options = new Options();
 
-        new LifeCycle($this->options);
+        $this->loadL10n();
+
+        $this->lifecycle = new LifeCycle($this->options);
+
+        add_action('init', array($this, 'init'));
+    }
+
+    private function loadL10n()
+    {
+
+    }
+
+    public function init()
+    {
+        if(!$this->lifecycle->checkInstalled()){
+            return;
+        }
     }
 }
